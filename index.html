@@ -1,844 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BBO Exam Prep — Basic Banking Operations</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBE BBO Interactive Question Bank</title>
+    <style>
+        :root {
+            --primary: #004d99;
+            --secondary: #0066cc;
+            --bg-color: #f0f4f8;
+            --text-main: #333;
+            --text-muted: #555;
+            --border-radius: 8px;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            display: flex;
+            height: 100vh;
+        }
 
-  :root{
-    --ink:#1B1B1F;
-    --paper:#FBF9F4;
-    --paper-2:#F2EEE3;
-    --line: rgba(27,27,31,0.12);
-    --brass:#B8862E;
-    --brass-deep:#8C6420;
-    --vault:#123524;
-    --vault-2:#1C4A34;
-    --vault-tint:#E4EDE6;
-    --danger:#9E3B2C;
-    --danger-tint:#F6E4DF;
-    --ok:#1C4A34;
-    --ok-tint:#DCEBE1;
-    --shadow: 0 20px 60px -30px rgba(18,53,36,0.45);
-    --radius-lg: 28px;
-    --radius-md: 18px;
-    --radius-sm: 12px;
-  }
-  [data-theme="dark"]{
-    --ink:#F1EEE4;
-    --paper:#12181A;
-    --paper-2:#1A2224;
-    --line: rgba(241,238,228,0.12);
-    --brass:#D9A94B;
-    --brass-deep:#F0C066;
-    --vault:#7FBF9C;
-    --vault-2:#3E7A5B;
-    --vault-tint:rgba(63,122,91,0.18);
-    --danger:#E08770;
-    --danger-tint:rgba(158,59,44,0.22);
-    --ok:#7FBF9C;
-    --ok-tint:rgba(28,74,52,0.28);
-    --shadow: 0 20px 60px -28px rgba(0,0,0,0.65);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:
-      radial-gradient(1200px 700px at 85% -10%, var(--paper-2), transparent 60%),
-      var(--paper);
-    color:var(--ink);
-    font-family:'Manrope', system-ui, sans-serif;
-    min-height:100vh;
-    transition:background .4s ease, color .4s ease;
-    -webkit-font-smoothing:antialiased;
-  }
-  .app{
-    max-width:760px;
-    margin:0 auto;
-    min-height:100vh;
-    padding:20px 20px 48px;
-    display:flex;
-    flex-direction:column;
-  }
-  h1,h2,h3{font-family:'Fraunces', serif; margin:0; font-weight:600;}
-  .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:6px 2px 22px;
-  }
-  .brand{display:flex; align-items:center; gap:10px;}
-  .brand-mark{
-    width:38px;height:38px;border-radius:11px;
-    background:linear-gradient(155deg, var(--vault-2), var(--vault));
-    display:flex;align-items:center;justify-content:center;
-    color:var(--brass-deep);
-    font-family:'Fraunces',serif; font-weight:700; font-size:18px;
-    flex-shrink:0;
-  }
-  [data-theme="dark"] .brand-mark{ color:#12181A; background:linear-gradient(155deg, var(--vault), #0e2a1c);}
-  .brand-text .k{font-size:11px; letter-spacing:.03em; opacity:.62; font-weight:600;}
-  .brand-text .v{font-size:15px; font-weight:700; line-height:1.15;}
-  .icon-btn{
-    width:38px;height:38px;border-radius:50%;
-    border:1px solid var(--line); background:var(--paper-2); color:var(--ink);
-    display:flex;align-items:center;justify-content:center;cursor:pointer;
-    transition:transform .18s ease, background .2s ease;
-    flex-shrink:0;
-  }
-  .icon-btn:hover{ transform: translateY(-1px); }
-  .icon-btn:active{ transform: scale(.94); }
-  .icon-btn svg{width:18px;height:18px;}
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
 
-  /* ---------- Setup screen ---------- */
-  .hero{
-    background:linear-gradient(160deg, var(--vault) 0%, var(--vault-2) 100%);
-    border-radius: var(--radius-lg);
-    padding: 34px 26px 30px;
-    color:#F4EFDF;
-    position:relative;
-    overflow:hidden;
-    box-shadow: var(--shadow);
-    margin-bottom:22px;
-  }
-  .hero::after{
-    content:"";
-    position:absolute; right:-60px; top:-60px; width:220px; height:220px;
-    border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, rgba(216,168,80,0.35), transparent 65%);
-  }
-  .hero .eyebrow{ font-size:12.5px; letter-spacing:.02em; color:#D9C79A; opacity:.85; font-weight:600;}
-  .hero h1{ font-size:29px; line-height:1.15; margin:10px 0 12px; max-width:22ch; color:#FBF6E7;}
-  .hero p{ font-size:14.5px; line-height:1.55; color:#D8E4DB; max-width:46ch; margin:0;}
-  .hero .stats{ display:flex; gap:22px; margin-top:22px; flex-wrap:wrap;}
-  .hero .stat b{ display:block; font-family:'Fraunces',serif; font-size:22px; color:var(--brass-deep);}
-  .hero .stat span{ font-size:11.5px; color:#C9D6CC; letter-spacing:.02em;}
+        .sidebar h2 {
+            text-align: center;
+            color: var(--primary);
+            padding: 20px;
+            margin: 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.2em;
+        }
 
-  .card{
-    background:var(--paper-2);
-    border:1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding:22px;
-    margin-bottom:16px;
-  }
-  .card h3{font-size:16px; margin-bottom:14px;}
-  .field-label{ font-size:12.5px; font-weight:700; opacity:.68; margin-bottom:10px; display:block;}
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 1em;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 1px solid #f4f4f4;
+            transition: all 0.3s ease;
+        }
 
-  .pill-row{ display:flex; gap:9px; flex-wrap:wrap;}
-  .pill{
-    border:1.5px solid var(--line);
-    background:var(--paper);
-    color:var(--ink);
-    padding:9px 16px;
-    border-radius:999px;
-    font-family:'Manrope',sans-serif;
-    font-weight:700;
-    font-size:14px;
-    cursor:pointer;
-    transition: all .18s ease;
-  }
-  .pill.active{
-    background:var(--vault);
-    border-color:var(--vault);
-    color:#F4EFDF;
-  }
-  [data-theme="dark"] .pill.active{ color:#0F1613; }
-  .pill:hover:not(.active){ border-color: var(--brass); }
+        .nav-btn:hover {
+            background-color: #e6f0ff;
+            color: var(--primary);
+        }
 
-  .module-grid{ display:flex; flex-direction:column; gap:8px; margin-top:2px;}
-  .module-row{
-    display:flex; align-items:center; gap:10px;
-    padding:10px 12px; border-radius:12px;
-    background:var(--paper); border:1px solid var(--line);
-    cursor:pointer; font-size:13.5px; font-weight:600;
-  }
-  .module-row input{ accent-color: var(--vault); width:16px; height:16px; flex-shrink:0;}
-  .module-row .count{ margin-left:auto; opacity:.55; font-weight:700; font-size:12px;}
+        .nav-btn.active {
+            background-color: var(--primary);
+            color: #fff;
+            font-weight: bold;
+        }
 
-  .btn-primary{
-    width:100%;
-    background: linear-gradient(135deg, var(--brass) 0%, var(--brass-deep) 100%);
-    color:#241705;
-    border:none;
-    padding:17px 20px;
-    border-radius:16px;
-    font-family:'Manrope',sans-serif;
-    font-weight:800;
-    font-size:16px;
-    cursor:pointer;
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    transition: transform .15s ease, box-shadow .2s ease;
-    box-shadow: 0 14px 30px -14px rgba(184,134,46,0.65);
-  }
-  [data-theme="dark"] .btn-primary{ color:#1A1204; }
-  .btn-primary:hover{ transform: translateY(-2px); }
-  .btn-primary:active{ transform: translateY(0px) scale(.98); }
-  .btn-ghost{
-    width:100%;
-    background:transparent;
-    color:var(--ink);
-    border:1.5px solid var(--line);
-    padding:14px 20px;
-    border-radius:16px;
-    font-weight:700;
-    font-size:14.5px;
-    cursor:pointer;
-    margin-top:10px;
-  }
-  .btn-ghost:hover{ border-color: var(--brass);}
+        /* Main Content Styles */
+        .content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
 
-  .resume-banner{
-    background: var(--vault-tint);
-    border:1px solid var(--vault-2);
-    border-radius:var(--radius-md);
-    padding:16px 18px;
-    margin-bottom:16px;
-    display:flex; align-items:center; gap:14px;
-  }
-  .resume-banner .txt{flex:1;}
-  .resume-banner .txt b{display:block; font-size:14px; margin-bottom:2px;}
-  .resume-banner .txt span{font-size:12.5px; opacity:.7;}
-  .resume-actions{ display:flex; gap:8px; }
-  .resume-actions button{
-    border:none; border-radius:10px; padding:9px 14px; font-weight:700; font-size:13px; cursor:pointer;
-  }
-  .resume-actions .go{ background:var(--vault); color:#F4EFDF;}
-  [data-theme="dark"] .resume-actions .go{ color:#0F1613; }
-  .resume-actions .discard{ background:transparent; color:var(--ink); border:1px solid var(--line);}
+        .header {
+            margin-bottom: 30px;
+        }
 
-  /* ---------- Quiz screen ---------- */
-  .quiz-header{
-    display:flex; align-items:center; gap:12px; margin-bottom:18px;
-  }
-  .progress-wrap{ flex:1; }
-  .progress-meta{ display:flex; justify-content:space-between; font-size:12px; font-weight:700; opacity:.62; margin-bottom:7px;}
-  .progress-track{ height:7px; background:var(--paper-2); border-radius:999px; overflow:hidden; border:1px solid var(--line);}
-  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--vault-2), var(--brass)); border-radius:999px; transition: width .45s cubic-bezier(.4,0,.2,1);}
-  .timer-chip{
-    display:flex; align-items:center; gap:6px;
-    background:var(--paper-2); border:1px solid var(--line);
-    padding:9px 14px; border-radius:999px; font-weight:800; font-size:14px;
-    font-variant-numeric: tabular-nums;
-    flex-shrink:0;
-  }
-  .timer-chip.warn{ background:var(--danger-tint); border-color: var(--danger); color:var(--danger); }
-  .timer-chip svg{width:15px;height:15px;}
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 10px 0;
+        }
 
-  .qa-stage{
-    position:relative;
-    min-height:390px;
-  }
-  .q-card{
-    background:var(--paper-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-    padding:26px 24px 22px;
-    box-shadow: var(--shadow);
-  }
-  .q-card.slide-in-r{ animation: slideInR .42s cubic-bezier(.22,1,.36,1); }
-  .q-card.slide-in-l{ animation: slideInL .42s cubic-bezier(.22,1,.36,1); }
-  @keyframes slideInR{ from{ opacity:0; transform: translateX(38px);} to{opacity:1; transform:translateX(0);} }
-  @keyframes slideInL{ from{ opacity:0; transform: translateX(-38px);} to{opacity:1; transform:translateX(0);} }
+        .header p {
+            color: var(--text-muted);
+            margin: 0;
+        }
 
-  .q-module{
-    display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:.02em;
-    color: var(--brass-deep); background: rgba(184,134,46,0.14);
-    padding:5px 11px; border-radius:999px; margin-bottom:14px;
-  }
-  .q-num{ font-size:12.5px; font-weight:700; opacity:.5; margin-bottom:6px; }
-  .q-text{ font-family:'Fraunces',serif; font-size:19px; line-height:1.42; font-weight:500; margin-bottom:22px;}
+        .module-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
 
-  .opt{
-    display:flex; align-items:flex-start; gap:12px;
-    padding:14px 15px;
-    border:1.5px solid var(--line);
-    border-radius:14px;
-    margin-bottom:10px;
-    cursor:pointer;
-    background:var(--paper);
-    transition: border-color .15s ease, background .15s ease, transform .1s ease;
-  }
-  .opt:hover{ border-color: var(--brass); }
-  .opt:active{ transform: scale(.995); }
-  .opt .letter{
-    width:26px; height:26px; border-radius:8px; flex-shrink:0;
-    background:var(--paper-2); border:1.5px solid var(--line);
-    display:flex; align-items:center; justify-content:center;
-    font-weight:800; font-size:12.5px;
-  }
-  .opt .txt{ font-size:14.5px; line-height:1.48; padding-top:2px;}
-  .opt.selected{ border-color: var(--vault); background: var(--vault-tint); }
-  .opt.selected .letter{ background:var(--vault); border-color:var(--vault); color:#F4EFDF;}
-  [data-theme="dark"] .opt.selected .letter{ color:#0F1613; }
-  .opt.correct{ border-color: var(--ok); background: var(--ok-tint); }
-  .opt.correct .letter{ background:var(--ok); border-color:var(--ok); color:#fff; }
-  .opt.incorrect{ border-color: var(--danger); background: var(--danger-tint); }
-  .opt.incorrect .letter{ background:var(--danger); border-color:var(--danger); color:#fff; }
-  .opt.locked{ cursor:default; }
+        .module-section.active {
+            display: block;
+        }
 
-  .qa-actions{
-    display:flex; gap:10px; margin-top:18px;
-  }
-  .btn-nav{
-    flex:1; padding:14px; border-radius:14px; border:1.5px solid var(--line);
-    background:var(--paper); font-weight:700; font-size:14px; cursor:pointer; color:var(--ink);
-  }
-  .btn-nav.next{ background: var(--vault); border-color:var(--vault); color:#F4EFDF;}
-  [data-theme="dark"] .btn-nav.next{ color:#0F1613; }
-  .btn-nav:disabled{ opacity:.4; cursor:not-allowed; }
+        .qa-container { 
+            background: #fff; 
+            padding: 25px; 
+            margin-bottom: 20px; 
+            border-radius: var(--border-radius); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            border-left: 5px solid var(--secondary); 
+        }
 
-  .kbd-hint{ text-align:center; font-size:11.5px; opacity:.42; margin-top:14px; font-weight:600; }
+        .case-study { 
+            border-left: 5px solid #b8860b; 
+        }
 
-  .pause-overlay{
-    background:var(--paper-2); border:1px dashed var(--line); border-radius:var(--radius-lg);
-    min-height:390px; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:30px;
-  }
-  .pause-overlay svg{width:44px;height:44px; color:var(--brass); margin-bottom:14px;}
-  .pause-overlay h3{ margin-bottom:6px; }
-  .pause-overlay p{ font-size:13.5px; opacity:.6; max-width:32ch; margin:0 0 20px;}
+        .question { 
+            font-weight: 600; 
+            color: var(--primary); 
+            margin-bottom: 15px; 
+            font-size: 1.15em; 
+        }
 
-  /* ---------- Results ---------- */
-  .score-hero{
-    background:linear-gradient(160deg, var(--vault) 0%, var(--vault-2) 100%);
-    border-radius:var(--radius-lg); padding:36px 26px; text-align:center; color:#F4EFDF;
-    box-shadow:var(--shadow); margin-bottom:20px; position:relative; overflow:hidden;
-  }
-  .score-hero::after{ content:""; position:absolute; left:-50px; bottom:-70px; width:200px;height:200px;border-radius:50%;
-    background:radial-gradient(circle, rgba(216,168,80,0.3), transparent 65%);}
-  .score-big{ font-family:'Fraunces',serif; font-size:56px; font-weight:700; color:var(--brass-deep); line-height:1;}
-  .score-sub{ font-size:14px; color:#D8E4DB; margin-top:8px;}
-  .score-verdict{ font-size:13px; margin-top:14px; color:#F4EFDF; opacity:.9; max-width:34ch; margin-left:auto; margin-right:auto;}
+        .case-study .question {
+            color: #b8860b;
+        }
 
-  .breakdown{ display:flex; flex-direction:column; gap:8px; margin-bottom:20px;}
-  .bd-row{ display:flex; align-items:center; gap:10px; font-size:13px;}
-  .bd-row .name{ width:150px; flex-shrink:0; font-weight:700; opacity:.75;}
-  .bd-track{ flex:1; height:8px; background:var(--paper-2); border-radius:999px; overflow:hidden; border:1px solid var(--line);}
-  .bd-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg, var(--vault-2), var(--brass)); }
-  .bd-pct{ width:38px; text-align:right; font-weight:800; flex-shrink:0;}
+        .answer { 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+        }
 
-  .tabs{ display:flex; gap:8px; margin-bottom:16px;}
-  .tab{ flex:1; text-align:center; padding:11px; border-radius:12px; border:1.5px solid var(--line); background:var(--paper-2); font-weight:700; font-size:13px; cursor:pointer;}
-  .tab.active{ background:var(--vault); border-color:var(--vault); color:#F4EFDF;}
-  [data-theme="dark"] .tab.active{ color:#0F1613; }
+        ul {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
 
-  .review-item{
-    background:var(--paper-2); border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:12px;
-  }
-  .review-item .q-module{ margin-bottom:10px; }
-  .review-item .q-text{ font-size:15.5px; margin-bottom:14px;}
-  .review-opt{ padding:10px 12px; border-radius:10px; margin-bottom:6px; font-size:13.5px; display:flex; gap:8px; border:1px solid transparent;}
-  .review-opt .letter{ font-weight:800; flex-shrink:0;}
-  .review-opt.correct{ background:var(--ok-tint); color:var(--ok); border-color:var(--ok);}
-  .review-opt.incorrect{ background:var(--danger-tint); color:var(--danger); border-color:var(--danger);}
-  .explain{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); font-size:13px; line-height:1.55; opacity:.82;}
-  .explain b{ opacity:1; }
+        li {
+            margin-bottom: 6px;
+        }
 
-  .hidden{ display:none !important; }
-
-  @media (max-width:480px){
-    .hero h1{ font-size:24px; }
-    .q-text{ font-size:17px; }
-    .bd-row .name{ width:110px; font-size:12px;}
-  }
-</style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body data-theme="light">
-<div class="app">
+<body>
 
-  <div class="topbar">
-    <div class="brand">
-      <div class="brand-mark">B</div>
-      <div class="brand-text">
-        <div class="k">SBE · School of Banking Excellence</div>
-        <div class="v">BBO Exam Prep</div>
-      </div>
-    </div>
-    <button class="icon-btn" id="themeToggle" title="Toggle theme">
-      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-    </button>
-  </div>
-
-  <!-- ===================== SETUP SCREEN ===================== -->
-  <div id="screen-setup">
-    <div class="hero">
-      <div class="eyebrow">TRAINEE MANUAL · BASIC BANKING OPERATIONS</div>
-      <h1>Get exam-ready for your BBO assessment.</h1>
-      <p>100 questions drawn from the full trainee manual — banking business, customer service, cash &amp; teller, clearing, treasury, funds transfer, e-banking, foreign operations and fraud.</p>
-      <div class="stats">
-        <div class="stat"><b id="statTotal">100</b><span>QUESTIONS</span></div>
-        <div class="stat"><b>9</b><span>MODULES</span></div>
-        <div class="stat"><b>MCQ</b><span>FORMAT</span></div>
-      </div>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>SBE BBO Modules</h2>
+        <button class="nav-btn active" onclick="showModule('mod1', this)">Module 1: The Business of Banking</button>
+        <button class="nav-btn" onclick="showModule('mod2', this)">Module 2: Customer Service</button>
+        <button class="nav-btn" onclick="showModule('mod3', this)">Module 3: Cash & Teller</button>
+        <button class="nav-btn" onclick="showModule('mod4', this)">Module 4: Clearing Operations</button>
+        <button class="nav-btn" onclick="showModule('mod5', this)">Module 5: Treasury Operations</button>
+        <button class="nav-btn" onclick="showModule('mod6', this)">Module 6: Funds Transfer</button>
+        <button class="nav-btn" onclick="showModule('mod7', this)">Module 7: Electronic Banking</button>
+        <button class="nav-btn" onclick="showModule('mod8', this)">Module 8: Foreign Operations</button>
+        <button class="nav-btn" onclick="showModule('cases', this)">Case Studies</button>
     </div>
 
-    <div id="resumeBanner" class="resume-banner hidden">
-      <div class="txt">
-        <b>You have a session in progress</b>
-        <span id="resumeMeta"></span>
-      </div>
-      <div class="resume-actions">
-        <button class="discard" id="resumeDiscard">Discard</button>
-        <button class="go" id="resumeGo">Resume</button>
-      </div>
+    <!-- Main Content Area -->
+    <div class="content">
+        <div class="header">
+            <h1 id="module-title">Module 1: The Business of Banking</h1>
+            <p>Select a module from the left menu to view the relevant question bank.</p>
+        </div>
+
+        <div id="mod1" class="module-section active">
+            <div class="qa-container ">
+                <div class="question">Q1: What are three services that a deposit bank renders to the customer?</div>
+                <div class="answer"><strong>A:</strong> The manual lists several services you can choose from:<br><ul><li>Mobilization of savings [cite: 5].</li><li>Extension of credit facilities for the financing of domestic and foreign trade [cite: 5].</li><li>Providing facility for the transfer of funds [cite: 5].</li><li>Management of customers' investment [cite: 5].</li><li>Safe keeping of valuables [cite: 5].</li><li>Brokerage services (buying and selling of stocks and shares) [cite: 5].</li><li>Providing of foreign exchange facilities for travelers [cite: 5].</li><li>Providing business status reports and references [cite: 5].</li><li>Business advisory services [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q2: What are the global roles of banks?</div>
+                <div class="answer"><strong>A:</strong> Banks play five different roles in the global economy:<br><ul><li>The intermediation role [cite: 5].</li><li>The payment role [cite: 5].</li><li>The guarantor role [cite: 5].</li><li>The agency role [cite: 5].</li><li>The policy role [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q3: What are the duties of the bank to their customer?</div>
+                <div class="answer"><strong>A:</strong> The duties of the banker include:<br><ul><li>The bank undertakes to receive money and settle bills for its customer's account [cite: 5].</li><li>The bank borrows the proceeds and undertakes to repay them [cite: 5].</li><li>The bank will not cease to do business with the customer except upon reasonable notice [cite: 5].</li><li>The bank is not liable to pay until the customer demands payment from the bank [cite: 5].</li><li>The bank should only make such payments as the customer has authorized (Pay according to Customers Instruction) [cite: 5].</li><li>The bank should not refuse to make payments up to the limit of the customer's credit balance [cite: 5].</li><li>The banker has a duty to keep in confidence what he/she knows about the customer's affairs (Confidentiality) [cite: 5].</li><li>The bank has a duty to provide the customer on request with a statement of account [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q4: The bank's businesses can be classified into two groups. What are those two groups?</div>
+                <div class="answer"><strong>A:</strong> Banking is divided into two main categories:<br><ul><li>Business groups [cite: 5].</li><li>Support groups [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q5: List the Consumer protection framework for banks.</div>
+                <div class="answer"><strong>A:</strong> The consumer protection framework seeks to guarantee:<br><ul><li>High standards for customer service delivery [cite: 5].</li><li>Market discipline [cite: 5].</li><li>Fair treatment of customers by banks [cite: 5].</li><li>Offer protection to the vulnerable group (less educated people, elderly, critically ill, refugees, physically challenged people etc.) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q6: List and explain five principles of the consumer protection framework.</div>
+                <div class="answer"><strong>A:</strong> The manual outlines nine principles; you can select any five:<br><ul><li>Legal, Regulatory, and Supervisory Framework: There shall be effective structures to protect consumers of banking services [cite: 5].</li><li>Responsible Business Conduct: Financial Institutions shall observe high ethical standards and offer suitable products [cite: 5].</li><li>Disclosure and Transparency: Financial institutions shall provide accurate, timely, detailed, and clear information [cite: 5].</li><li>Consumer Financial Education: Impart financial knowledge and skill to enable consumers to make informed decisions [cite: 5].</li><li>Fair treatment: Consumers shall be treated equitably without bias [cite: 5].</li><li>Protection of Consumer Assets and Privacy: Appropriate measures shall guarantee protection of consumer assets and personal information [cite: 5].</li><li>Complaints Handling and Redress: Adequate measures shall be established to address disputes fairly and transparently [cite: 5].</li><li>Competition: Competitive markets should be promoted to encourage innovation and excellent service delivery [cite: 5].</li><li>Enforcement: Ensure effective enforcement of regulations with the application of appropriate sanctions [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q7: What are the two major sources of the bank's income?</div>
+                <div class="answer"><strong>A:</strong> The two major sources of income are:<br><ul><li>Net Interest margin (Interest Income Less Interest Expense) [cite: 5].</li><li>Commission and Fees [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod2" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q8: What's the primary function of the CSU?</div>
+                <div class="answer"><strong>A:</strong> The Customer Service Unit (CSU) is the first point of contact when a customer comes to the Bank [cite: 5]. Its broad functions include:<br><ul><li>Account opening [cite: 5].</li><li>Issuance of customer cheque books [cite: 5].</li><li>Receiving customers' standing orders [cite: 5].</li><li>Receiving and effecting stop payment [cite: 5].</li><li>Making changes to customers mandates [cite: 5].</li><li>Performing the signature verification functions [cite: 5].</li><li>Attending to balance and general customer enquiries [cite: 5].</li><li>Receiving and handling customers' complaints [cite: 5].</li><li>Updating of Customer Mandates [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q9: What are the roles of a lobby officer in the CSU?</div>
+                <div class="answer"><strong>A:</strong> Lobby Service officers play a primarily customer service role and assist customers in the banking hall [cite: 5]. Their functions include:<br><ul><li>Welcoming and greeting customers as they come into the banking hall [cite: 5].</li><li>Directing customers to the appropriate service points [cite: 5].</li><li>Ensuring orderly conduct amongst customers in the banking hall [cite: 5].</li><li>Addressing customers questions and concerns [cite: 5].</li><li>Assisting with queue management to decongest the banking hall [cite: 5].</li><li>Answering the telephone in a friendly, professional manner, taking messages with accuracy [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q10: In the context of the CSU security, what measures should be taken to ensure confidentiality of customers?</div>
+                <div class="answer"><strong>A:</strong> The security functions of the CSU include:<br><ul><li>Keeping all cheque booklets issued and un-issued in the fireproof cabinets [cite: 5].</li><li>Complying with the provisions of the SOP with respect to re-order level for the stock of cheque books [cite: 5].</li><li>Time-stamping all incoming requests or mails and have records of outgoing mails [cite: 5].</li><li>Maintaining confidentiality in the treatment of all Customers' data [cite: 5].</li><li>Releasing cheque books as authorized by the Customers only [cite: 5].</li><li>Keeping stamps, files, copies of Customers letters and phone numbers away when closing [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q11: Give four examples of deposit accounts.</div>
+                <div class="answer"><strong>A:</strong> The manual lists several categories of accounts. You can choose from:<br><ul><li>Checking Accounts (Personal, Joint, Sole Proprietorship, Corporate, Unlimited Companies, Public Sector, NGO's Accounts) [cite: 5].</li><li>Savings Accounts [cite: 5].</li><li>Minor Accounts [cite: 5].</li><li>Partnership Accounts [cite: 5].</li><li>Investment Accounts [cite: 5].</li><li>Unincorporated, Society or Executor's Accounts [cite: 5].</li><li>External Accounts [cite: 5].</li><li>Domiciliary Accounts [cite: 5].</li><li>Trustee Accounts [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q12: Differentiate between current and savings account.</div>
+                <div class="answer"><strong>A:</strong> The key operational differences include:<br><ul><li>A Current Account is subject to a Current Account Maintenance Fee (CAMF) applied to customer induced debit transactions [cite: 5].</li><li>A Savings account is not subject to CAMF for withdrawals or transfers [cite: 5].</li><li>A Savings account cannot be thrown into debit [cite: 5].</li><li>Current accounts can accommodate loan repayments without incurring the CAMF charge [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q13: What is the main responsibility of the CSU staff for resolving complaints?</div>
+                <div class="answer"><strong>A:</strong> Handling customer complaints requires the CSU staff to:<br><ul><li>Keep a logbook for customer complaints [cite: 5].</li><li>Clearly establish what went wrong [cite: 5].</li><li>Identify alternative solutions [cite: 5].</li><li>Seek to correct error immediately [cite: 5].</li><li>Institute a process to avoid re-occurrence [cite: 5].</li><li>Inform customer of your actions and promise that there will not be repeat errors [cite: 5].</li><li>Ensure the customer is properly restituted and not made to suffer any loss in any form [cite: 5].</li><li>Let customer express emotions and train staff to see customer's point of view [cite: 5].</li><li>Gather information accurately and politely from the customer [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q14: List five categories of accounts commonly offered by the bank and explain.</div>
+                <div class="answer"><strong>A:</strong> The manual lists ten categories; you can list any five:<br><ul><li>Checking Accounts (includes Personal, Joint, Sole Proprietorship, Corporate, Unlimited Companies, Public Sector, NGO's Accounts) [cite: 5].</li><li>Savings Accounts [cite: 5].</li><li>Minor Accounts [cite: 5].</li><li>Partnership Accounts [cite: 5].</li><li>Investment Accounts [cite: 5].</li><li>Unincorporated, Society or Executor's Accounts [cite: 5].</li><li>External Accounts [cite: 5].</li><li>Domiciliary Accounts [cite: 5].</li><li>Trustee Accounts [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q15: Explain the importance of verifying customer information and identification.</div>
+                <div class="answer"><strong>A:</strong> Verifying customer information (like BVN) is crucial because it:<br><ul><li>Provides a means of identifying and verifying the identity of each customer across all banks in Nigeria [cite: 5].</li><li>Checks identity theft, ensures safety of customers' funds, and avoids losses through compromise of Personal Identification Numbers (PIN) [cite: 5].</li><li>Increases access, convenience, and service levels across the industry [cite: 5].</li><li>Promotes financial inclusion and revolutionizes the Payment System [cite: 5].</li><li>Enhances the integrity of banking services delivery by building a reliable customer identification system [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q16: What types of documents need to be submitted to create a corporate account?</div>
+                <div class="answer"><strong>A:</strong> The documents required for a Corporate Current Account include:<br><ul><li>Completed Account Opening Forms [cite: 5].</li><li>Identification of all signatories [cite: 5].</li><li>Copy of Certificate of Incorporation [cite: 5].</li><li>Certified Copy of Form CAC 2.3, CO7, CO2/ Status Report [cite: 5].</li><li>Certified Copy of Memo and Articles of Association [cite: 5].</li><li>Board Resolution to Open Account [cite: 5].</li><li>SCUML "where required" [cite: 5].</li><li>Tax identification number (TIN) [cite: 5].</li><li>License where required for consultancy and professional bodies [cite: 5].</li><li>BVN authentication and verification [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q17: Explain deferrals in the context of account opening.</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Deferrals can be done by designated senior staff [cite: 5].</li><li>Deferrals on CO7 should not exceed 30 days and no cheque book may be issued during this period [cite: 5].</li><li>Only very senior executive staff can defer any document for the Public Sector [cite: 5].</li><li>Banks can lose money through a shoddy handling of deferrals because the banking relationship is not yet fully established until all documentation are received from the Customer [cite: 5].</li><li>Statutory Documents cannot be waived under any circumstances [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod3" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q18: What is the significance of the layout and design in the teller area?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The layout and design can serve as a source of motivation to the Staff and customers [cite: 5].</li><li>Queue management skill is measured at the Teller points [cite: 5].</li><li>Speed of service can easily be established by a prospective Customer [cite: 5].</li><li>Courtesy extended by Tellers can be seen by all as it is an open place [cite: 5].</li><li>The Customers first impression of a Bank and the Staff is at the CTU and CSU [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q19: How does CCTV in a teller area contribute to bank security and operations?</div>
+                <div class="answer"><strong>A:</strong> CCTV is of great importance as it helps to:<br><ul><li>Monitor tellers for fraud [cite: 5].</li><li>Provide teller area supervision especially when the supervisor is not directly in the banking hall [cite: 5].</li><li>Deter robberies to an extent as the intended robber knows their face will be caught on camera [cite: 5].</li><li>Give customers additional comfort and confidence once they know the premises and teller area are under surveillance [cite: 5].</li><li>Prove highly useful during investigations [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q20: What qualities are expected from a teller in a banking environment?</div>
+                <div class="answer"><strong>A:</strong> Teller qualities include:<br><ul><li>Honesty and Integrity [cite: 5].</li><li>Courtesy [cite: 5].</li><li>Neat and welcoming [cite: 5].</li><li>Speed and accuracy [cite: 5].</li><li>Enthusiasm [cite: 5].</li><li>Security consciousness [cite: 5].</li><li>Courageous [cite: 5].</li></ul><br>Additionally, they must possess basic skills such as communication, numeric, interpersonal, listening, and problem solving skills [cite: 5].</div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q21: Who is a bank teller?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>A Teller is an employee of a bank who handles customer transactions, processes deposits/withdrawals, and balances cash drawers [cite: 5].</li><li>They are a banking professional who works at the front line of a bank branch [cite: 5].</li><li>They also answer customer questions, resolve issues and cross sell banks other products and services [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q22: Why is it important for a teller to resume earlier than other staff?</div>
+                <div class="answer"><strong>A:</strong> Tellers should resume earlier than 7:30am to:<br><ul><li>Switch on their computer and get ready for work [cite: 5].</li><li>Review their compartment and ensure no cash was left in the cubicle [cite: 5].</li><li>Pick their till boxes from the vault [cite: 5].</li><li>Receive an initial cash allocation to ensure they have sufficient cash to start the day [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q23: What is the sequence of activities tellers must perform at the end of the day?</div>
+                <div class="answer"><strong>A:</strong> The end-of-day sequence includes:<br><ul><li>The Teller balances their position by checking the balance on the system and comparing it to the balance of cash on hand [cite: 5].</li><li>If there is a difference, they print out the transaction journal and do a call over to resolve the error, escalating to a supervisor if it persists [cite: 5].</li><li>Complete the proof sheet to show the summary of activities for the day [cite: 5].</li><li>Make up a batch by enveloping all the instruments [cite: 5].</li><li>Complete a teller transfer slip to transfer (sell) any cash in the cubicle back to the vault [cite: 5].</li><li>Evacuate cash into the vault with the Vault Custodian [cite: 5].</li><li>Return loose cash, stamps, and proofs into the till box, lock it, and sign the vault record book alongside the Vault Custodian [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q24: Who are the key personnel involved in vault operations and what is the importance of dual control?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The key personnel are the Vault Custodian, Tellers / Bulk Tellers, Head Teller, Head of Operations, and Branch Services Manager [cite: 5].</li><li>The Vault must be under Dual Control to ensure that all cash movements from any of the stakeholders are done securely and in line with the Bank policy [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q25: Differentiate between a cash shortage and a cash overage.</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Cash Shortage:</strong> A situation whereby the physical cash with the Teller is less than the balance shown by the system and Teller Proof (often due to overpayment to customers or pilfering) [cite: 5].</li><li><strong>Cash Overage (Surplus):</strong> A situation whereby the physical cash with the Teller is more than the balance shown by the system and Teller Proof (often due to deliberate or genuine under-payment to customers) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q26: How do you process a deposit tagged 'Subject to Count' (STC)?</div>
+                <div class="answer"><strong>A:</strong> To process an STC deposit:<br><ul><li>Ensure a legally signed and executed Subject to Count agreement is in place between the bank and the customer [cite: 5].</li><li>Review the Deposit Slip for regularity [cite: 5].</li><li>Bundle count the cash deposits [cite: 5].</li><li>Pass entries immediately: Debit the Cash Account and Credit the customer's account immediately [cite: 5].</li><li>Release the acknowledgement slip to the customer [cite: 5].</li><li>Count the cash in detail within 24 hours [cite: 5].</li><li>Debit/Credit the customer's account under advice for any discovered shortages/overages [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q27: How do you handle a late cash deposit?</div>
+                <div class="answer"><strong>A:</strong> Handling a late deposit requires the teller to:<br><ul><li>Review the Deposit Slip for regularity [cite: 5].</li><li>Verify (detail count) cash in the presence of the depositor [cite: 5].</li><li>Machine stamp and write or rubber stamp "late deposit for credit on (date)" on the deposit slip [cite: 5].</li><li>Advise the depositor that credit to their account will be made the following business day [cite: 5].</li><li>Obtain the Cash Officer's/Supervisor's initials on the deposit slip and the Late Cash register [cite: 5].</li><li>Release the acknowledgement copy to the depositor [cite: 5].</li><li>Record Cash in the Teller Proof as Late Cash and place the deposit in the cash box/vault [cite: 5].</li><li>Process the deposit the following business day [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q28: What is the importance of maintaining a difference account for each teller?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The branch will have a specific difference account for shortages and overages [cite: 5].</li><li>It allows tellers to prepare debit or credit GL tickets to formally record unresolved cash differences, ensuring proper tracking and accountability [cite: 5].</li><li>It requires the signature of the Cash Officer/Head of Cash, maintaining strict oversight [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q29: What are the steps for handling counterfeit notes and forged checks?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>For counterfeit notes: Tellers must check for counterfeits under ultraviolet light during the cash counting process [cite: 5].</li><li>For forged checks: The teller must refer unusual endorsements, such as cheques that appear to be forged or cloned, to the Cash Officer/Head of Cash for review and approval before any payment is made [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod4" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q30: Who are the parties involved in a payment and settlement process (specifically for checks)?</div>
+                <div class="answer"><strong>A:</strong> The parties to the payments/settlements process are:<br><ul><li>Cheque Depositor [cite: 5].</li><li>Beneficiary [cite: 5].</li><li>Collection Bank [cite: 5].</li><li>Clearing House [cite: 5].</li><li>Bank 1 (Paying Bank) [cite: 5].</li><li>Payer / Cheque Issuer [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q31: What is a dud check?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>A dud check is one issued to induce the delivery of any asset or property, or to settle a lawful obligation, which when presented within a reasonable period of time is dishonoured (bounced) on grounds of lack of funds or insufficient funds in the account of the Issuer [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q32: How does the issuance of dud checks affect the financial system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>It erodes confidence and integrity in financial instruments [cite: 5].</li><li>It adversely affects the CBN 'Cash-lite' policy and the stability of the Financial System [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q33: What is clearing?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Clearing is a process of effecting settlements between third parties through the use of banks' instruments (e.g., cheques, drafts, dividend warrants) [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod5" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q34: What is the full meaning of NIBSS, CP, BA, Forex, and TC?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>NIBSS:</strong> Nigeria Interbank Settlement Systems [cite: 5].</li><li><strong>CP:</strong> Commercial Papers [cite: 5].</li><li><strong>BA:</strong> Bankers Acceptances [cite: 5].</li><li><strong>Forex:</strong> Foreign Exchange [cite: 5].</li><li><strong>TC:</strong> Travelers' Cheques [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q35: What is SWIFT and what is RTGS?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>SWIFT:</strong> The Society for Worldwide Interbank Financial Telecommunication. It is a highly secure platform used for processing foreign currency transactions and settlements between correspondent banks [cite: 5].</li><li><strong>RTGS:</strong> Real Time Gross Settlement. It is a settlement system where the transfer of large funds or securities between banks is executed on a "real time" (without delay) and "gross" (one-to-one) basis [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q36: What is the bank's risk exposure on a clean Commercial Paper, and why do investors prefer guaranteed ones?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Commercial Papers (CP) are completely unsecured unless a Bank adds its Guarantee, thereby becoming a Guaranteed Commercial Paper (GCP) [cite: 5].</li><li>On a clean CP, the customer is the primary obligor, leaving the investor exposed to default risk [cite: 5].</li><li>Investors prefer guaranteed ones because the bank becomes a secondary obligor, providing a formal guarantee of payment [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q37: Explain Open Buy Back (OBB) and Fixed Buy Back (FBB).</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Both are inter-bank placements or takings that are secured by Treasury Bills [cite: 5].</li><li><strong>Open Buy Back (OBB):</strong> Has a flexible timing (as short as 1 day/overnight or as long as 91 days). Being "open", either the counterparty or the bank can call for its deposit back at any time [cite: 5].</li><li><strong>Fixed Buy Back (FBB):</strong> Funds are pledged to the counterparty for a strictly fixed period, meaning the counterparty cannot call for its deposit back at any time [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q38: List five notable source documents in Treasury Operations.</div>
+                <div class="answer"><strong>A:</strong> The notable sources include:<br><ul><li>Deal Slips from the Treasury Dealers [cite: 5].</li><li>CBN Debits and Credits statements [cite: 5].</li><li>Cash lodgments Slips from the Treasury Department [cite: 5].</li><li>Cash Withdrawals Slips from the Treasury Department [cite: 5].</li><li>Foreign Exchange Deals Slips from the Foreign Exchange Department [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q39: What typical entries can be found in a CBN statement?</div>
+                <div class="answer"><strong>A:</strong> TROPS raises entries for CBN statements which include:<br><ul><li>Cash call [cite: 5].</li><li>Cash Reserve Requirements (CRR) [cite: 5].</li><li>Government Agencies Transactions (such as CBN cash lodgments and withdrawals) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q40: What processing platforms are available to Treasury Operations?</div>
+                <div class="answer"><strong>A:</strong> The processing platforms available to TROPS include:<br><ul><li>The Bank's Core Banking Package (e.g. Flexcube) [cite: 5].</li><li>RTGS / CIFTS (NISS) [cite: 5].</li><li>CBN T24 (DEPO X) [cite: 5].</li><li>SWIFT [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q41: Explain the following controls: Segregation of Duties, Authorization, Authorization Limits, Written Mandates, and Confirmation.</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Segregation of Duties:</strong> One person must not be allowed to initiate a transaction and conclude it; initiation, confirmation, recording, and settlement must be separated [cite: 5].</li><li><strong>Authorization:</strong> The staff that prepares the source document should not be the one to approve or authorize its posting [cite: 5].</li><li><strong>Authorization Limits:</strong> Setting limits in figures for staff, dictating what amounts signatories can approve and what junior/senior dealers can handle [cite: 5].</li><li><strong>Written Mandates:</strong> All instructions must be in writing; staff should not implement verbal instructions even from top Management as they can be denied [cite: 5].</li><li><strong>Confirmation:</strong> Due to their magnitude, all TROPS transactions must be independently confirmed before processing [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod6" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q42: What are the primary objectives of any payment and settlement system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The primary objectives of any settlement system are safety, security, soundness, effectiveness, and efficiency [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q43: What are the main differences between a traditional payment system and an electronic payment system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Traditional Payment System:</strong> Involves payments using cash and paper instruments like cheques and drafts. The value for most of these instruments is not immediate as they must be cleared [cite: 5].</li><li><strong>Electronic Payment System:</strong> A paperless system utilizing devices like Telephones, Computers, the Internet, and ATMs. Transactions handled this way are cheaper and processed more efficiently [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q44: What is the primary purpose of a wholesale payment system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>A wholesale payment system handles high-value transactions between banks, governments, and other financial organizations [cite: 5].</li><li>These transactions are done through robust platforms like SWIFT and NIBSS (NEFT) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q45: Give examples of retail payment systems.</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Retail payment systems cover transactions involving individual customers using Smart Cards, ATMs, Phone banking, and other similar electronic banking products [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q46: What types of payments are covered by bulk NEFT credits and bulk NEFT debits?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Bulk NEFT Credits:</strong> These cover automated direct credits like salary and pension payments, and shareholders' dividends [cite: 5].</li><li><strong>Bulk NEFT Debits:</strong> These cover automated direct debits based on pre-authorized instructions, such as insurance premium payments, scheduled donations, and utility bill payments [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q47: What are the key advantages of a mobile money account?</div>
+                <div class="answer"><strong>A:</strong> With a Mobile Money account, a customer can:<br><ul><li>Deposit and Withdraw from their account directly via their phone [cite: 5].</li><li>Transfer money to anyone on any network [cite: 5].</li><li>Pay bills and buy airtime conveniently [cite: 5].</li><li>Send funds easily, as the mobile account of a beneficiary will be credited instantly [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q48: How do banks use dedicated instant payment systems for third-party transfers?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The bank installs the software on the customer's mobile phone and issues a USER ID and Password [cite: 5].</li><li>The remitter accesses the platform, selects the beneficiary's bank, enters the account details and amount, and sends the instruction [cite: 5].</li><li>Instantaneously, the remitter's account is debited and the beneficiary's account is credited, and both parties receive alerts [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q49: What are the primary goals of Fintech companies and how do they impact traditional banks?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The goal of FinTech companies is to make financial services easily accessible to the population, enhance financial procedures, promote financial inclusion, and ensure seamless payments [cite: 5].</li><li>They impact traditional banks by posing a direct competitive threat, offering the same services and forcing traditional banks to innovate to guarantee their survival [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q50: Who are the parties to a funds transfer process?</div>
+                <div class="answer"><strong>A:</strong> The parties to FT (whether local or foreign) are:<br><ul><li>Remitter or Sender [cite: 5].</li><li>Remitter or Sender's Bank [cite: 5].</li><li>Beneficiary [cite: 5].</li><li>Beneficiary's Bank [cite: 5].</li><li>Intermediary (maybe CBN, NIBSS, Discount Houses) [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod7" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q51: What are the potential benefits for customers using a mobile banking app?</div>
+                <div class="answer"><strong>A:</strong> The benefits of electronic/mobile banking include:<br><ul><li><strong>Convenience:</strong> Conduct transactions from anywhere with internet access [cite: 5].</li><li><strong>Speed and Efficiency:</strong> Faster processing without paperwork [cite: 5].</li><li><strong>Cost-effectiveness:</strong> Automating processes saves money [cite: 5].</li><li><strong>24/7 availability:</strong> Services available round the clock [cite: 5].</li><li><strong>Security:</strong> Protected by encryption and firewalls [cite: 5].</li><li><strong>Personalized services:</strong> Targeted messages and offers [cite: 5].</li><li><strong>Environmental Benefits:</strong> Reduces paper waste [cite: 5].</li><li><strong>Account & Investment Management:</strong> Easy tracking of finances and stock trading [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q52: What is a major challenge or risk retail banks face with mobile banking apps?</div>
+                <div class="answer"><strong>A:</strong> Challenges and risks include:<br><ul><li><strong>Security Attacks:</strong> E-banking channels are vulnerable to cyberattacks as they rely on internet networks [cite: 5].</li><li><strong>Fraud:</strong> Fraudsters use phishing and social engineering to target customers [cite: 5].</li><li><strong>Insider Threats:</strong> Employees misusing access to customer data [cite: 5].</li><li><strong>Lack of Customer Awareness:</strong> Customers inadvertently exposing themselves to risks by sharing logins or falling for scams [cite: 5].</li><li><strong>Regulatory Compliance:</strong> Adapting to complex and time-consuming rules, like OTP usage during network issues [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod8" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q53: List five transactions that can be documented using the e-form NCX.</div>
+                <div class="answer"><strong>A:</strong> E-Form NCX handles Non-Commercial Exports where payments are not expected. Transactions include:<br><ul><li>Gifts/Personal effects [cite: 5].</li><li>Trade Samples/printed Business Matter [cite: 5].</li><li>Machineries/Equipment for repairs & replacement abroad [cite: 5].</li><li>Return of Machineries/Equipment after the execution of specific contract [cite: 5].</li><li>Return of empty containers [cite: 5].</li><li>Trans-shipments/Re-exports [cite: 5].</li><li>Supplies to Diplomatic/Consular Missions and supplies to UNO for their own needs [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="cases" class="module-section ">
+            <div class="qa-container case-study">
+                <div class="question">Case Study 1: How do you process a Zenith Bank check for 5 million Naira paid into an Access Bank account?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>This is processed as an Other Banks' Cheques (OBC) transaction because it is drawn on another bank but payable to our customer [cite: 5].</li><li>It will be processed through the Clearing House with a forward value date (T+1) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 2: How do you treat an Access Bank check for 3 million Naira paid into another Access Bank account?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>It is processed internally as an In-House Account-To-Account Transfer since both the drawer and payee are domiciled with the same Drawee bank [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 3: A customer pays a UBA check for 10.1 million Naira. How is it processed?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Because the amount exceeds the maximum limit for cheques (N10 million fixed by the CBN), it cannot be cleared via standard cheque truncation [cite: 5].</li><li>The customer must utilize electronic channels like RTGS to transfer the funds [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 4: What platform should be used to debit an account for 7.5 million Naira to pay salaries for 550 staff?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Bulk NEFT Credits</strong> should be used, as they are Automated Direct Credits designed specifically to facilitate paperless clearing of bulk credits like salaries [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 5: What platform is used to debit an account for 75 million Naira and purchase $75,000 for transfer?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>SWIFT</strong> is used for processing the foreign currency transactions and settlement instructions offshore [cite: 5].</li><li><strong>RTGS</strong> is used for the high-value Naira settlement [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 6: Assume Access Bank wants to buy $150,000 from First Bank. What platform will Access Bank use?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Access Bank will use <strong>RTGS</strong> to execute the real-time interbank Naira settlement [cite: 5].</li><li>Access Bank will use <strong>SWIFT</strong> to process the foreign exchange settlement [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 7: What platform should a customer use to transfer 135,000 Naira to a secondary school for fees?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The customer should use <strong>Single Item NEFT</strong> (which covers individual transfers like tuition payments) or <strong>NIBSS Instant Payment (NIP)</strong> [cite: 5].</li></ul></div>
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-      <h3>How many questions?</h3>
-      <div class="pill-row" id="countPills">
-        <button class="pill" data-count="10">10</button>
-        <button class="pill active" data-count="20">20</button>
-        <button class="pill" data-count="40">40</button>
-        <button class="pill" data-count="100">All 100</button>
-      </div>
-    </div>
+    <!-- Interactive Script -->
+    <script>
+        function showModule(moduleId, btnElement) {
+            // Hide all modules
+            var modules = document.querySelectorAll('.module-section');
+            modules.forEach(function(mod) {
+                mod.classList.remove('active');
+            });
 
-    <div class="card">
-      <h3>Time limit</h3>
-      <div class="pill-row" id="timePills">
-        <button class="pill" data-mins="10">10 min</button>
-        <button class="pill active" data-mins="20">20 min</button>
-        <button class="pill" data-mins="40">40 min</button>
-        <button class="pill" data-mins="0">No limit</button>
-      </div>
-    </div>
+            // Remove active class from all buttons
+            var buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
 
-    <div class="card">
-      <h3>Modules to include</h3>
-      <label class="field-label">Leave all checked to draw from the whole manual</label>
-      <div class="module-grid" id="moduleGrid"></div>
-    </div>
+            // Show selected module
+            document.getElementById(moduleId).classList.add('active');
+            btnElement.classList.add('active');
 
-    <button class="btn-primary" id="startBtn">
-      Start exam
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
-    </button>
-  </div>
-
-  <!-- ===================== QUIZ SCREEN ===================== -->
-  <div id="screen-quiz" class="hidden">
-    <div class="quiz-header">
-      <div class="progress-wrap">
-        <div class="progress-meta"><span id="progLabel">Question 1 of 20</span><span id="progPct">5%</span></div>
-        <div class="progress-track"><div class="progress-fill" id="progFill" style="width:5%"></div></div>
-      </div>
-      <div class="timer-chip" id="timerChip">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
-        <span id="timerText">20:00</span>
-      </div>
-      <button class="icon-btn" id="pauseBtn" title="Pause">
-        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
-      </button>
-    </div>
-
-    <div class="qa-stage" id="qaStage">
-      <div class="q-card" id="qCard">
-        <div class="q-num" id="qNum">QUESTION 1</div>
-        <div class="q-module" id="qModule">Module</div>
-        <div class="q-text" id="qText">Question text</div>
-        <div id="qOptions"></div>
-      </div>
-      <div class="pause-overlay hidden" id="pauseOverlay">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
-        <h3>Exam paused</h3>
-        <p>The question is hidden and your timer is on hold. Resume when you're ready.</p>
-        <button class="btn-primary" style="width:auto; padding:12px 26px;" id="resumeFromPause">Resume exam</button>
-      </div>
-    </div>
-
-    <div class="qa-actions">
-      <button class="btn-nav" id="prevBtn">← Previous</button>
-      <button class="btn-nav next" id="nextBtn">Next →</button>
-    </div>
-    <div class="kbd-hint">Tap A–D or use keys 1–4 to answer · Enter for next</div>
-  </div>
-
-  <!-- ===================== RESULTS SCREEN ===================== -->
-  <div id="screen-results" class="hidden">
-    <div class="score-hero">
-      <div class="score-big" id="scoreBig">0%</div>
-      <div class="score-sub" id="scoreSub">0 of 0 correct</div>
-      <div class="score-verdict" id="scoreVerdict"></div>
-    </div>
-
-    <div class="card">
-      <h3>Accuracy by module</h3>
-      <div class="breakdown" id="breakdown"></div>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active" id="tabAll">All questions</div>
-      <div class="tab" id="tabMissed">Missed only</div>
-    </div>
-    <div id="reviewList"></div>
-
-    <button class="btn-primary" id="retakeBtn">Take another exam</button>
-    <button class="btn-ghost" id="retryMissedBtn">Retry missed questions</button>
-  </div>
-
-</div>
-
-<script>
-const DATA = {"title": "SBE Basic Banking Operations (BBO) - Trainee Manual Exam Prep", "modules": ["The Business of Banking", "Customer Service Functions", "Cash & Teller Operations", "Clearing Operations", "Treasury Operations (TROPS)", "Funds Transfer & Payment Systems", "Electronic Banking Operations", "Foreign Operations", "Fraud and Fraudulent Practices"], "questions": [{"id": 1, "module": "The Business of Banking", "question": "Under BOFIA 2020 (as amended), which of the following is NOT part of the definition of 'banking business'?", "options": ["Receiving deposits on current or savings accounts", "Paying or collecting cheques drawn by or paid in by customers", "Provision of finance for lending or investments", "Underwriting of insurance policies"], "correct": 3, "explanation": "BOFIA 2020 defines banking business around receiving deposits, paying/collecting cheques, and provision of finance for lending or investment - not insurance underwriting."}, {"id": 2, "module": "The Business of Banking", "question": "Which role of banks involves borrowing from surplus units and lending to deficit units of the economy?", "options": ["The payment role", "The intermediation role", "The agency role", "The policy role"], "correct": 1, "explanation": "The intermediation role is where banks mobilize savings from surplus units and channel them as credit to deficit units."}, {"id": 3, "module": "The Business of Banking", "question": "Which banking division is described as offering personalized financial and banking services traditionally reserved for a bank's rich, high-net-worth individuals?", "options": ["Retail Banking", "Corporate Banking", "Private Banking", "Commercial Banking"], "correct": 2, "explanation": "Private Banking offers personalized financial and banking services traditionally offered to a bank's high-net-worth clients."}, {"id": 4, "module": "The Business of Banking", "question": "Which of the following is a 'Support Group' rather than a 'Business Group' in a bank's divisional structure?", "options": ["Treasury", "Leasing", "Internal Control/Internal Audit", "Corporate Banking"], "correct": 2, "explanation": "Internal Control/Internal Audit is a Support Group function, checking compliance with SOPs; Treasury, Leasing and Corporate Banking are Business Groups."}, {"id": 5, "module": "The Business of Banking", "question": "In the case Prosperity Ltd v Lloyds (1923), what principle regarding the banker-customer relationship was established?", "options": ["A bank must give reasonable notice before ceasing to do business with a customer", "A bank can refuse payment without any liability", "A bank owes no duty of confidentiality to customers", "A bank may debit a customer's account without authorization"], "correct": 0, "explanation": "The ruling established that a bank will not cease to do business with a customer except upon reasonable notice, giving time for outstanding cheques to be presented."}, {"id": 6, "module": "The Business of Banking", "question": "Which of the following is one of the exceptions to a banker's duty of confidentiality as stated in Tournier's case?", "options": ["Customer's request for a loan", "Compulsion of law", "Customer opening a new account", "Bank's marketing needs"], "correct": 1, "explanation": "Tournier's case lists four exceptions to confidentiality: compulsion of law, public duty, interest of the bank, and express or implied consent of the customer."}, {"id": 7, "module": "The Business of Banking", "question": "The banker's right to retain a customer's movable or fixed property in the ordinary course of extending credit is known as the right of:", "options": ["Set-off", "Lien", "Appropriation", "Commission"], "correct": 1, "explanation": "The right of Lien allows a banker to retain or claim possession of a customer's property in the ordinary course of extending credit (Foley v. Hill, 1848)."}, {"id": 8, "module": "The Business of Banking", "question": "A customer who operates more than one account with a bank has the right to decide which account a payment should be credited to. This is known as the:", "options": ["Right of set-off", "Right of lien", "Right of appropriation", "Right of commission"], "correct": 2, "explanation": "The right of appropriation allows a customer with multiple accounts to decide which account to make a payment into, without duress from the bank."}, {"id": 9, "module": "The Business of Banking", "question": "Which of the following is described in the manual as an 'act of negligence' by a bank?", "options": ["Verifying a customer's residence before account opening", "Diverting a company cheque into a private account", "Requesting two passport photographs at account opening", "Providing a statement of account on request"], "correct": 1, "explanation": "Diverting a company cheque into a private account is listed among the Acts of Negligence by Banks, alongside failures in due diligence during collection."}, {"id": 10, "module": "The Business of Banking", "question": "How many principles make up the CBN's Consumer Protection Framework for banks?", "options": ["Five", "Seven", "Nine", "Eleven"], "correct": 2, "explanation": "The CBN developed nine principles for the Consumer Protection Framework, drawing on international best practice bodies such as the OECD and the World Bank."}, {"id": 11, "module": "The Business of Banking", "question": "Which of these is NOT one of the ways banks make money as listed in the manual?", "options": ["Net Interest Margin", "Maintenance Charge (which replaced COT)", "Government subsidies", "Funds Transfer Charges"], "correct": 2, "explanation": "Banks make money mainly from net interest margin and commissions/fees such as maintenance charges and funds transfer charges - not government subsidies."}, {"id": 12, "module": "The Business of Banking", "question": "According to the manual, what replaced the former Commission on Turnover (COT) in 2016?", "options": ["Exchange Commission", "Maintenance Charge", "Advisory Fee", "Cheque Book Cost"], "correct": 1, "explanation": "The Maintenance Charge replaced the former COT (Commission on Turnover) in 2016."}, {"id": 13, "module": "Customer Service Functions", "question": "Which unit is generally the first point of contact when a customer visits the bank to make enquiries or open an account?", "options": ["Cash and Teller Unit", "Customer Service Unit (CSU)", "Treasury Operations", "Internal Control"], "correct": 1, "explanation": "The Customer Service Unit (CSU) is the section set aside to manage customers' needs and is the first point of contact for enquiries, account opening and complaints."}, {"id": 14, "module": "Customer Service Functions", "question": "Under the CSU's functional classification, which heading covers keeping cheque booklets in fireproof cabinets and maintaining confidentiality of customer data?", "options": ["Client Information Services", "Security Function", "Products and Services Management Function", "Lobby Service"], "correct": 1, "explanation": "The Security Function heading covers safeguarding cheque booklets, time-stamping mail, and maintaining confidentiality of customer data."}, {"id": 15, "module": "Customer Service Functions", "question": "For an individual current account, which document is specifically required in addition to identification and reference forms?", "options": ["Board resolution to open account", "Utility bill showing the address of the intended client", "Certificate of Incorporation", "SCUML certificate"], "correct": 1, "explanation": "Individual current account opening requires a utility bill showing the signatory's address, alongside identification, photographs and reference forms."}, {"id": 16, "module": "Customer Service Functions", "question": "For corporate account opening, deferrals on which document should not exceed 30 days and during which no cheque book may be issued?", "options": ["Utility bill", "CO7", "Passport photograph", "Signature mandate"], "correct": 1, "explanation": "Deferrals on CO7 should not exceed 30 days, and no cheque book may be issued while such a deferral is outstanding."}, {"id": 17, "module": "Customer Service Functions", "question": "What is the maximum rate at which the Current Account Maintenance Fee (CAMF) may be charged?", "options": ["N1 per mille", "N5 per mille", "1% flat", "N50 per transaction"], "correct": 0, "explanation": "CAMF applies to customer-induced debit transactions on current accounts and is negotiable subject to a maximum of N1 per mille."}, {"id": 18, "module": "Customer Service Functions", "question": "The Electronic Money Transfer Levy imposes a levy of how much on electronic transfers of amounts over N10,000?", "options": ["N10", "N50", "N100", "N500"], "correct": 1, "explanation": "The levy imposes N50 on electronic transfers over N10,000, payable only by the sender of the funds."}, {"id": 19, "module": "Customer Service Functions", "question": "Which of the following is exempt from the Electronic Funds Transfer Levy?", "options": ["Third-party fund transfers above N10,000", "Transfers by self to self (inter or intra bank)", "Salary payments to staff accounts", "Payments for goods and services"], "correct": 1, "explanation": "Payment deposits or transfers by self to self, whether inter- or intra-bank, are exempt from the EFT Levy."}, {"id": 20, "module": "Customer Service Functions", "question": "What is the primary objective of the Bank Verification Number (BVN) initiative launched by the CBN and Bankers' Committee?", "options": ["To replace all cheque books with cards", "To identify and verify each customer's identity across all banks in Nigeria", "To set interest rates for savings accounts", "To regulate foreign exchange trading"], "correct": 1, "explanation": "BVN was launched to provide a means of identifying and verifying each customer's identity across all banks in Nigeria and to check identity theft."}, {"id": 21, "module": "Customer Service Functions", "question": "Which of these is one of the steps in properly handling a customer complaint according to the manual?", "options": ["Ignore the complaint until the customer escalates it", "Keep a logbook for customer complaints", "Ask the customer to resolve it with another bank", "Delay correction until month-end"], "correct": 1, "explanation": "Handling customer complaints includes keeping a logbook, promptly investigating, correcting errors immediately, and reverting to the customer soonest."}, {"id": 22, "module": "Customer Service Functions", "question": "Stop payment instructions accepted over the telephone must be backed up with:", "options": ["A written confirmation within a specified time", "Immediate account closure", "A new account opening", "A fresh cheque book request"], "correct": 0, "explanation": "Telephone stop-payment instructions must be backed up with written confirmation within a specified time, in line with SOP."}, {"id": 23, "module": "Customer Service Functions", "question": "Which category of account documentation additionally requires a Copy of Form 2 (Application for registration of business name)?", "options": ["Individual Current Account", "Savings Account", "Clubs and Associations", "Public Sector"], "correct": 2, "explanation": "Clubs and Associations account opening requires a Certificate of Registration of Business Name and a copy of Form 2, among other documents."}, {"id": 24, "module": "Cash & Teller Operations", "question": "According to the manual, what is the primary entry point into a bank for most customers?", "options": ["The Treasury Department", "The Cash & Teller Unit", "The Legal Department", "The Data Centre"], "correct": 1, "explanation": "The Cash & Teller Unit (CTU) is described as the primary entry into a bank, where customers deposit, withdraw or transfer funds."}, {"id": 25, "module": "Cash & Teller Operations", "question": "Which register is used specifically for monitoring movement of cash in and out of the vault at the start of the day?", "options": ["Teller Proof", "Vault-In Register", "Departmental Proof", "Late Cash Register"], "correct": 1, "explanation": "The Vault-In Register is used for monitoring movement in and out of the vault at the beginning of the day."}, {"id": 26, "module": "Cash & Teller Operations", "question": "During Foreign Currency (FCY) cash withdrawal, what commission rate is charged on the value of the request, before VAT?", "options": ["0.5%", "1%", "2%", "5%"], "correct": 1, "explanation": "FCY withdrawal entries include a debit for a 1% commission on the value of the request, plus 7.5% VAT on that commission."}, {"id": 27, "module": "Cash & Teller Operations", "question": "A situation where the physical cash held by a teller is LESS than the balance shown by the system and Teller Proof is known as:", "options": ["Cash Overage", "Cash Shortage", "Cash Difference Account", "Cash Subject to Count"], "correct": 1, "explanation": "A Cash Shortage occurs when the physical cash is less than the system/proof balance, possibly due to overpayment or posting errors."}, {"id": 28, "module": "Cash & Teller Operations", "question": "Under the 'Subject to Count' (STC) procedure, within how many hours should the cash be counted in detail?", "options": ["6 hours", "12 hours", "24 hours", "48 hours"], "correct": 2, "explanation": "Under STC procedure, entries are passed immediately upon bundle count, but the cash must be counted in detail within 24 hours per SOP."}, {"id": 29, "module": "Cash & Teller Operations", "question": "Other Banks' Cheques (OBC) deposited into a customer's account are typically given what forward value date, in line with the Bankers' Clearing House Rules?", "options": ["Same day (T+0)", "T+1", "T+3", "T+5"], "correct": 1, "explanation": "OBC deposits are given a forward value date of T+1, in line with the Bankers' Clearing House Rules, credited around 10pm."}, {"id": 30, "module": "Cash & Teller Operations", "question": "Who exercises Dual Control over the vault, typically alongside the Vault Custodian?", "options": ["The Head Teller only", "The Branch Services Manager", "Any available teller", "The IT Department"], "correct": 1, "explanation": "The Vault must be under Dual Control, typically the Vault Custodian and the Branch Services Manager (or designated Head of Operations)."}, {"id": 31, "module": "Cash & Teller Operations", "question": "Which of the following is listed as a key control measure in Cash Operations?", "options": ["Sharing passwords with trusted colleagues", "Balancing cash every 2 to 3 hours", "Posting transactions without review", "Ignoring unusual transaction patterns"], "correct": 1, "explanation": "Key controls include balancing cash every 2 to 3 hours, not sharing passwords, and reviewing documents before posting."}, {"id": 32, "module": "Cash & Teller Operations", "question": "Which of these is listed among the 'Teller Don'ts' in the manual?", "options": ["Verify signatures against the mandate", "Use mobile phones while attending to customers", "Wear the bank's uniform", "Time-stamp documents received"], "correct": 1, "explanation": "Teller Don'ts include eating/drinking in cubicles in front of customers, shouting or frowning at customers, and using mobile phones while attending to customers."}, {"id": 33, "module": "Cash & Teller Operations", "question": "A 'Cash Overage' at a teller's till may result from which of the following?", "options": ["Deliberate under-payment to customers", "Overpayment to customers", "Deliberate pilfering of cash by a teller", "System downtime"], "correct": 0, "explanation": "Cash overage occurs when physical cash exceeds the system/proof balance, which can result from deliberate or genuine under-payment to customers, among other causes."}, {"id": 34, "module": "Clearing Operations", "question": "The Nigerian Bankers' Clearing House (NBCH) was established under which legal provision?", "options": ["S.47 of the CBN Act No. 7 of 2007", "The Companies and Allied Matters Act", "The BOFIA 2020", "The Dud Cheques Act 1977"], "correct": 0, "explanation": "Section 47 of the CBN Act No. 7 of 2007 set up the Nigerian Bankers' Clearing House (NBCH)."}, {"id": 35, "module": "Clearing Operations", "question": "Which organisation now plays the role formerly held by CBN in day-to-day Bankers' Clearing operations?", "options": ["Nigeria Deposit Insurance Corporation (NDIC)", "Nigeria Interbank Settlement System (NIBSS)", "Securities and Exchange Commission", "Nigerian Customs Service"], "correct": 1, "explanation": "NIBSS (Nigeria Interbank Settlement System) now plays the role previously held by CBN in Bankers' Clearing."}, {"id": 36, "module": "Clearing Operations", "question": "What is the required Clearing Collateral for a Non-Settlement Bank, as stated in the manual?", "options": ["N15 billion", "N250 million", "N1 billion", "N50 million"], "correct": 1, "explanation": "Clearing Collateral for Non-Settlement Banks is N250 million, while Settlement Banks must hold N15 billion (figures subject to CBN review)."}, {"id": 37, "module": "Clearing Operations", "question": "When did the New Nigeria Cheque Standard become fully operational in the automated clearing system?", "options": ["September 2019", "April 1, 2021", "August 2007", "January 2018"], "correct": 1, "explanation": "The New Nigeria Cheque Standard became fully operational on April 1, 2021, after a parallel run that began in September 2019."}, {"id": 38, "module": "Clearing Operations", "question": "A Paying Bank unable to return a cheque within the clearing deadline must serve a Special Caution Notice on the Presenting Bank within what timeframe?", "options": ["1 hour after closure of the return cheque session", "2 hours after closure of the return cheque session", "24 hours after closure", "1 clearing session later"], "correct": 1, "explanation": "The deadline for submission of a Special Caution Notice is two hours after the closure of the return cheque session (Clearing Rule 12.1.8)."}, {"id": 39, "module": "Clearing Operations", "question": "Under the Cheque Truncation process, what is the initial cheque value limit fixed by the CBN?", "options": ["N1 million", "N5 million", "N10 million", "N50 million"], "correct": 2, "explanation": "The initial cheque truncation limit fixed by CBN is N10 million, though this figure can change over time."}, {"id": 40, "module": "Clearing Operations", "question": "How many clearing sessions operate daily under the Cheque Truncation process?", "options": ["Two", "Three", "Four", "Six"], "correct": 2, "explanation": "There are four clearing sessions daily: 8am, 11am, 2pm and 5pm, each with different rules on fresh versus returned instruments."}, {"id": 41, "module": "Clearing Operations", "question": "Under the Cheque Truncation process, clearing demarcation follows what basis?", "options": ["Same day (T+0)", "T+1", "T+2", "T+3"], "correct": 1, "explanation": "Under the Cheque Truncation process, clearing demarcation is T+1, with customers receiving value by 10pm on T+1 per the 2018 Clearing Rules."}, {"id": 42, "module": "Clearing Operations", "question": "Under the Dishonoured Cheques Act 1977, what is the penalty for an individual found guilty of issuing a dud cheque?", "options": ["A fine of N5,000", "A fine of N50,000", "Two years imprisonment without option of a fine", "Suspension of banking privileges for one year"], "correct": 2, "explanation": "The Dishonoured Cheques Act 1977 prescribes two years' imprisonment without the option of a fine for an individual found guilty; corporate bodies face a fine of not less than N5,000."}, {"id": 43, "module": "Clearing Operations", "question": "Under CBN's regulatory measures against dud cheques, serial offenders are barred from the clearing system and credit facilities for how long?", "options": ["1 year", "2 years", "5 years", "10 years"], "correct": 2, "explanation": "Serial issuers of dud cheques are barred from the clearing system and from accessing credit facilities for a period of five years, and are also listed with credit bureaux for five years."}, {"id": 44, "module": "Clearing Operations", "question": "'Inward Returned' cheques refer to:", "options": ["Other banks' cheques lodged by your customers for you to clear", "Cheques drawn on your bank, presented via clearing, and now being returned for reasons stated", "Cheques drawn on your bank that are honoured immediately", "Cheques presented for the first time at the clearing house"], "correct": 1, "explanation": "Inward Returned cheques are other banks' cheques lodged in your customers' accounts, presented to the drawee bank, and now returned for stated reasons (e.g., irregular signature)."}, {"id": 45, "module": "Treasury Operations (TROPS)", "question": "Treasury Operations (TROPS) is described as the engine room of Treasury, just as which other unit is the engine room of Credit?", "options": ["Financial Control", "Credit Operations (CROPs)", "Internal Audit", "Customer Service Unit"], "correct": 1, "explanation": "The manual states TROPS is the engine room of Treasury Operations, just as Credit Operations (CROPs) is the engine room of the Credit Department."}, {"id": 46, "module": "Treasury Operations (TROPS)", "question": "Under CBN guidelines, banks can pool funds from individuals to make up the minimum Treasury Bills purchase sum of:", "options": ["N10 million", "N50 million", "N100 million", "N500 million"], "correct": 1, "explanation": "Banks can pool funds from individuals to make up the minimum Treasury Bills purchase sum of N50 million."}, {"id": 47, "module": "Treasury Operations (TROPS)", "question": "For a Commercial Paper (CP), who is the primary obligor, meaning the aggregate value is treated as an off-balance-sheet item?", "options": ["The Bank", "The Customer", "The CBN", "NIBSS"], "correct": 1, "explanation": "For a CP, the customer is the primary obligor, so the aggregate value is treated as an off-balance-sheet item; for a BA, the Bank is the primary obligor and it appears on the balance sheet."}, {"id": 48, "module": "Treasury Operations (TROPS)", "question": "What is the CBN rule on the combined maximum for Bankers' Acceptances (BA) and Commercial Papers (CP) relative to a bank's equity capital?", "options": ["50% of equity capital", "100% of equity capital", "150% of equity capital", "200% of equity capital"], "correct": 2, "explanation": "The CBN rule states that BAs and CPs together must not exceed 150% of the equity capital of a bank."}, {"id": 49, "module": "Treasury Operations (TROPS)", "question": "Which platform is described as the CBN system used for processing foreign currency transactions and settlements between correspondent banks, with 'security' as its major advantage?", "options": ["RTGS", "SWIFT", "NIBSS", "CIFTS"], "correct": 1, "explanation": "SWIFT (Society for Worldwide Interbank Financial Telecommunication) is used for processing FCY transactions and settlements between correspondent banks, with security as its major advantage."}, {"id": 50, "module": "Treasury Operations (TROPS)", "question": "In TROPS internal control, which of the following is emphasized as something staff must never implement, even from top management?", "options": ["Written mandates", "Verbal instructions", "Confirmed transactions", "Approved deal slips"], "correct": 1, "explanation": "TROPS staff should not implement verbal instructions, even from top management, since verbal instructions can be denied; all mandates must be in writing."}, {"id": 51, "module": "Treasury Operations (TROPS)", "question": "In an Open Buy Back (OBB) transaction, what happens on maturity?", "options": ["The lender forfeits the Treasury Bills permanently", "The borrower transfers principal plus interest to the counterparty and the bills are returned", "The CBN absorbs the loss", "The transaction automatically renews"], "correct": 1, "explanation": "On maturity of an OBB, the borrower transfers principal plus interest to the counterparty, and the lending bank returns the Treasury Bills to the borrower."}, {"id": 52, "module": "Treasury Operations (TROPS)", "question": "What is the maximum tenor typically associated with an Open Buy Back (OBB) transaction?", "options": ["7 days", "30 days", "91 days", "180 days"], "correct": 2, "explanation": "OBB transactions have flexible timing, ranging from as short as 1 day (overnight) to as long as 91 days."}, {"id": 53, "module": "Treasury Operations (TROPS)", "question": "The Treasury Single Account (TSA) runs on which e-collection platform, used by all commercial banks in Nigeria?", "options": ["Interswitch", "Remita", "Quickteller", "NIBSS Instant Payment"], "correct": 1, "explanation": "The TSA runs on the Remita e-collection Platform, and all commercial banks in Nigeria are on this platform."}, {"id": 54, "module": "Treasury Operations (TROPS)", "question": "Under the Treasury Single Account arrangement, MDA accounts with commercial banks must be treated how at the end of each banking day?", "options": ["Left with a minimum float", "Zeroized (all monies remitted to the Consolidated Revenue Account)", "Converted to fixed deposits", "Transferred to NIBSS"], "correct": 1, "explanation": "MDA accounts with commercial banks must be zeroized at the end of every banking day, with monies remitted to the Consolidated Revenue Account with CBN."}, {"id": 55, "module": "Funds Transfer & Payment Systems", "question": "Which of these is described as a Wholesale Payment System handling transactions between banks, governments and other financial organizations?", "options": ["ATM network", "SWIFT / NIBSS (NEFT)", "POS terminals", "Mobile banking apps"], "correct": 1, "explanation": "Wholesale Payment Systems handle inter-institutional transactions and are done through platforms such as SWIFT and NIBSS (NEFT)."}, {"id": 56, "module": "Funds Transfer & Payment Systems", "question": "Under RTGS, what does 'gross settlement' mean?", "options": ["Transactions are bunched together before settling", "Each transaction is settled individually without netting against other transactions", "Only large transactions are eligible", "Settlement happens once daily"], "correct": 1, "explanation": "Gross settlement means each transaction is settled on a one-to-one basis without bunching or netting with any other transaction; once processed, payments are final and irrevocable."}, {"id": 57, "module": "Funds Transfer & Payment Systems", "question": "The software that processes RTGS funds transfers, formerly known as CIFTS, has now been renamed to:", "options": ["NEFT", "NIP", "Nigeria Settlement System (NISS)", "NAPS"], "correct": 2, "explanation": "The RTGS processing software, originally CBN Interbank Funds Transfer (CIFTS), has been renamed the Nigeria Settlement System (NISS)."}, {"id": 58, "module": "Funds Transfer & Payment Systems", "question": "RTGS has been running on the SWIFT network since which date?", "options": ["September 4, 2014", "January 1, 2010", "August 2007", "March 2004"], "correct": 0, "explanation": "RTGS has been running on the SWIFT network since September 4, 2014."}, {"id": 59, "module": "Funds Transfer & Payment Systems", "question": "For NIBSS transfers to proceed, the originating bank's Treasury Bills holding pledged at NIBSS must cover the amount to be transferred by at least what percentage?", "options": ["100%", "105%", "110%", "150%"], "correct": 2, "explanation": "The originating (transferring) bank's T/Bills holding at NIBSS must cover the amount to be transferred by at least 110% before the transfer can be effected."}, {"id": 60, "module": "Funds Transfer & Payment Systems", "question": "NEFT (NIBSS Electronic Funds Transfer) was introduced in Nigeria in which year?", "options": ["1999", "2004", "2007", "2015"], "correct": 1, "explanation": "NEFT was introduced in Nigeria in March 2004 to provide electronic payment options for consumers, banks, governments and other organizations."}, {"id": 61, "module": "Funds Transfer & Payment Systems", "question": "Which of the following best distinguishes NEFT from RTGS?", "options": ["NEFT is based on gross settlement, RTGS on net settlement", "NEFT is based on net (deferred) settlement processed in batches; RTGS settles individually in real time", "NEFT and RTGS use identical settlement mechanisms", "NEFT is only for foreign currency transfers"], "correct": 1, "explanation": "NEFT is a Deferred Net Settlement (DNS) system processed in batches at specific times, while RTGS is gross settlement, processed individually in real time ('push' transfer)."}, {"id": 62, "module": "Funds Transfer & Payment Systems", "question": "NIBSS Instant Payment (NIP) requires the remitter to first obtain which three items?", "options": ["A cheque book, a debit card, and a PIN", "A User ID, a User Name, and a Token", "A domiciliary account, a passport, and a visa", "A branch code, a sort code, and a swift code"], "correct": 1, "explanation": "To use NIP, an intending remitter applies for a Token and is given a User ID, a User Name, and a Token."}, {"id": 63, "module": "Funds Transfer & Payment Systems", "question": "NAPS (NIBSS Automated Payment System) commenced full operations on which date?", "options": ["Monday, February 2, 2015", "March 2004", "September 4, 2014", "April 1, 2021"], "correct": 0, "explanation": "NAPS is a strategic alliance between NIBSS and System-Specs Limited and commenced full operations on Monday, February 2, 2015."}, {"id": 64, "module": "Funds Transfer & Payment Systems", "question": "A written instruction from a customer specifying a recurring amount to be debited and transferred to a named beneficiary is known as a:", "options": ["Letter of Credit", "Standing Order/Standing Instruction", "Bill for Collection", "Certificate of Capital Importation"], "correct": 1, "explanation": "A Standing Order or Standing Instruction (SI) is a written instruction from a customer specifying an amount to be debited periodically and transferred to a named beneficiary."}, {"id": 65, "module": "Electronic Banking Operations", "question": "In what year was the first online banking service launched in the United States, according to the manual's 'Fun Facts'?", "options": ["1975", "1981", "1995", "2004"], "correct": 1, "explanation": "The manual notes the first online banking service was launched in 1981 in the United States of America."}, {"id": 66, "module": "Electronic Banking Operations", "question": "Which of the following is listed as a disadvantage of ATM banking in the manual?", "options": ["Requires internet connectivity at all times", "Limitations on cash withdrawals and physical/electronic vulnerability", "No cash withdrawal capability", "Cannot be used outside banking hours"], "correct": 1, "explanation": "Disadvantages of ATMs include limitations on cash withdrawal amounts and vulnerability both physically and electronically."}, {"id": 67, "module": "Electronic Banking Operations", "question": "Which two major global credit card companies does Access Bank currently issue, as stated in the manual?", "options": ["Visa and Mastercard", "Visa and American Express", "Mastercard and American Express", "Verve and Visa"], "correct": 1, "explanation": "The manual states Access Bank currently issues Visa and American Express credit cards."}, {"id": 68, "module": "Electronic Banking Operations", "question": "What is Access Bank's USSD code for USSD banking, as stated in the manual?", "options": ["*737#", "*901#", "*966#", "*322#"], "correct": 1, "explanation": "The manual states Access Bank's USSD code is *901#."}, {"id": 69, "module": "Electronic Banking Operations", "question": "Which of these is listed as a disadvantage of USSD/SMS banking?", "options": ["Requires a stable internet connection", "High cases of SIM card related fraud", "Not available outside urban areas", "Cannot be used for airtime recharge"], "correct": 1, "explanation": "USSD banking does not require internet connection, which is an advantage, but it carries high cases of SIM card related fraud as a disadvantage."}, {"id": 70, "module": "Electronic Banking Operations", "question": "P2P (peer-to-peer) payment platforms in Nigeria, such as Trove and Ajobox, are used mainly to carry out which activity without direct bank involvement?", "options": ["Foreign exchange trading", "Lending activities", "Import documentation", "Cheque clearing"], "correct": 1, "explanation": "P2P payment platforms in Nigeria are used mainly to carry out lending activities without the direct involvement of banks."}, {"id": 71, "module": "Electronic Banking Operations", "question": "Which security risk arises specifically from employees or contractors misusing their access to customer data or systems?", "options": ["Phishing", "Insider threats", "Skimming", "Social engineering"], "correct": 1, "explanation": "Insider threats arise from employees or contractors within financial institutions who may misuse their access to customer data or systems for malicious purposes."}, {"id": 72, "module": "Electronic Banking Operations", "question": "What does an Omnichannel customer experience allow customers to do?", "options": ["Use only one channel exclusively", "Pick up a transaction on one channel and continue seamlessly on another", "Access the bank only via the branch", "Bypass identity verification"], "correct": 1, "explanation": "Omnichannel experience allows customers to pick up transactions where they left off on one channel and continue on another, seamlessly connecting touch points."}, {"id": 73, "module": "Electronic Banking Operations", "question": "Which strategy is listed for migrating customers to self-service channels?", "options": ["Restricting access to only one channel", "Providing positive incentives and rewards such as fee waivers", "Removing all human staff support immediately", "Charging higher fees for digital transactions"], "correct": 1, "explanation": "Strategies for migrating customers to self-service include providing positive incentives such as fee waivers and reward points, alongside staff buy-in and awareness campaigns."}, {"id": 74, "module": "Electronic Banking Operations", "question": "According to the manual's safety tips, what should a customer do first if they believe their account has been compromised?", "options": ["Wait until the next banking day", "Contact their bank immediately", "Change their SIM card only", "Post about it on social media"], "correct": 1, "explanation": "The manual advises that if a customer thinks their account has been compromised or breached, they should contact their bank immediately."}, {"id": 75, "module": "Foreign Operations", "question": "Which document is completed for all import transactions into Nigeria, irrespective of the source of funding?", "options": ["Form NXP", "Form A", "Form M (e-Form M)", "Certificate of Capital Importation"], "correct": 2, "explanation": "All import transactions are processed by completing a Form M (electronic Form M), regardless of the source of funding."}, {"id": 76, "module": "Foreign Operations", "question": "In e-Form M processing, what does a 'BA number' assigned by the bank signify?", "options": ["The goods are exempt from inspection", "The goods being imported will be subjected to inspection", "The transaction has been rejected", "The importer has defaulted"], "correct": 1, "explanation": "A BA number is assigned if the goods being imported will be subjected to inspection; a CB number is assigned if they are not subject to inspection."}, {"id": 77, "module": "Foreign Operations", "question": "Under e-Form M processing, what does the status 'Query' indicate?", "options": ["The form has been accepted", "The form has been saved for later", "The form has been rejected", "The form has been finalized"], "correct": 2, "explanation": "During e-Form M processing, 'Query' means the form has been rejected, while 'Registered' means accepted and 'Stored' means saved."}, {"id": 78, "module": "Foreign Operations", "question": "Which payment method for import transactions is NOT allowed under Nigeria's local regulation, due to past bad debt experiences?", "options": ["Letter of Credit", "Bills for Collection", "Open Account", "Advance Payment"], "correct": 2, "explanation": "Open Account is not an approved payment method for import transactions under Nigeria's local regulation, due to bad debt experiences in the past."}, {"id": 79, "module": "Foreign Operations", "question": "Under a Letter of Credit, which party advises the beneficiary of the credit as instructed by the issuing bank?", "options": ["The Confirming Bank", "The Negotiating Bank", "The Advising Bank", "The Reimbursement Bank"], "correct": 2, "explanation": "The Advising Bank is the bank that advises the beneficiary of the credit, as instructed by the issuing bank."}, {"id": 80, "module": "Foreign Operations", "question": "Which type of Letter of Credit allows for advance payment to the beneficiary before performance under the sales contract?", "options": ["Back-to-Back L/C", "Transferable L/C", "Red Clause L/C", "Standby L/C"], "correct": 2, "explanation": "A Red Clause L/C allows for advance payment to the beneficiary before performance under the sales contract."}, {"id": 81, "module": "Foreign Operations", "question": "In documentary collections, releasing documents to the importer only against payment is also known as:", "options": ["Documents against Acceptance / Term Collection", "Documents against Payment / Sight Collection", "Open Account", "Standby Collection"], "correct": 1, "explanation": "Documents against Payment is also known as a Sight Collection or Cash Against Documents (CAD)."}, {"id": 82, "module": "Foreign Operations", "question": "The Pre-Arrival Assessment Report (PAAR) replaced which earlier document?", "options": ["Certificate of Capital Importation", "Risk Assessment Report (RAR)", "Bill of Lading", "Clean Certificate of Inspection"], "correct": 1, "explanation": "The PAAR replaced the Risk Assessment Report (RAR) when destination inspection was taken over from the scanning companies."}, {"id": 83, "module": "Foreign Operations", "question": "The regulatory document required for Commercial Export Trade processing in Nigeria is:", "options": ["Form M", "e-Form NXP", "Form A", "Certificate of Capital Importation"], "correct": 1, "explanation": "The e-Form NXP is the regulatory document for Commercial Export Trade processing, required for anyone engaging in export business."}, {"id": 84, "module": "Foreign Operations", "question": "Export proceeds must be repatriated within how many days of shipment for Non-Oil exports?", "options": ["30 days", "60 days", "90 days", "180 days"], "correct": 3, "explanation": "Export proceeds must be repatriated within 90 days for Oil exports and 180 days for Non-Oil exports, credited to the exporter's Export Proceeds Domiciliary Account."}, {"id": 85, "module": "Foreign Operations", "question": "The Nigerian Export Supervision Scheme (NESS) Administrative Levy charges what percentage of FOB value for non-oil exports?", "options": ["0.12%", "0.5%", "1%", "2%"], "correct": 1, "explanation": "NESS charges 0.5% of FOB value for non-oil exports and 0.12% for oil/gas exports."}, {"id": 86, "module": "Foreign Operations", "question": "Which certificate is issued for exports where there are discrepancies that cannot be corrected immediately before shipment?", "options": ["Clean Certificate of Inspection (CCI)", "Provisional Certificate of Inspection (PCI)", "Non-Negotiable Certificate of Inspection (NNCI)", "Certificate of Capital Importation"], "correct": 2, "explanation": "A Non-Negotiable Certificate of Inspection (NNCI) is issued when there are discrepancies that cannot be corrected immediately."}, {"id": 87, "module": "Foreign Operations", "question": "The e-Form A is used to process which category of foreign exchange transactions?", "options": ["Visible/import transactions", "Invisible transactions", "Export of physical goods", "Domestic clearing transactions"], "correct": 1, "explanation": "The e-Form A is completed for invisible trade transactions - the exchange of physically intangible items, such as school fees or medical bills."}, {"id": 88, "module": "Foreign Operations", "question": "What is a key eligibility requirement for Personal Travel Allowance (PTA), regarding the traveler's flight?", "options": ["The flight must be at least 5 hours' flight time and originate from Nigeria", "The flight must be under 2 hours", "The flight can originate from any country", "There is no flight time requirement"], "correct": 0, "explanation": "PTA applies only to journeys of not less than five hours' flight time, and the flight must originate from Nigeria."}, {"id": 89, "module": "Foreign Operations", "question": "What is the purpose of a Certificate of Capital Importation (CCI)?", "options": ["To document export inspection results", "To provide statutory evidence of capital inflow/investment into a Nigerian company", "To register an importer with FIRS", "To confirm a customer's BVN"], "correct": 1, "explanation": "A CCI provides statutory evidence of capital inflow/investment into a Nigerian company and facilitates repatriation of dividends and capital to foreign investors."}, {"id": 90, "module": "Fraud and Fraudulent Practices", "question": "Which three elements make up the Fraud Triangle as propounded by Cressey and Sutherland?", "options": ["Motive, Means, Opportunity", "Pressure, Opportunity, Rationalisation", "Deception, Dishonesty, Deprivation", "Prevention, Detection, Correction"], "correct": 1, "explanation": "The Fraud Triangle consists of Pressure, Opportunity, and Rationalisation, explaining why a worker may decide to commit workplace fraud."}, {"id": 91, "module": "Fraud and Fraudulent Practices", "question": "According to Cressey's research cited in the manual, approximately what percentage of fraud cases are influenced by financial pressure?", "options": ["50%", "70%", "85%", "95%"], "correct": 3, "explanation": "About 95% of all fraud cases have been influenced by financial pressure resulting from personal, employment, or external stress."}, {"id": 92, "module": "Fraud and Fraudulent Practices", "question": "Which fraud feature is illustrated by the example of a person using fake documents to obtain a bank loan and disappearing without repaying?", "options": ["Dishonesty", "Deception", "Deprivation", "Sharp practices"], "correct": 1, "explanation": "Deception is defined as getting what does not belong to you by false pretenses, illustrated by using fake documents to obtain a loan without intending to repay."}, {"id": 93, "module": "Fraud and Fraudulent Practices", "question": "Vault manipulation and cash counterfeit are fraud-prone activities most associated with which department/unit?", "options": ["Customer Service", "Cash & Teller", "Information Technology", "Financial Control"], "correct": 1, "explanation": "Cash & Teller is listed with fraud-prone activities including cash shortage, forged instruments, cash movement crime, vault manipulation, and cash counterfeit."}, {"id": 94, "module": "Fraud and Fraudulent Practices", "question": "Cheque Cloning and Cheque Kiting are fraud-prone activities most associated with which department/unit?", "options": ["Funds Transfer", "Bank Clearing Operations", "Treasury/TROPS", "Credit/Marketing"], "correct": 1, "explanation": "Bank Clearing Operations is associated with fraud-prone activities including cheque cloning, suppression of instruments, and cheque kiting."}, {"id": 95, "module": "Fraud and Fraudulent Practices", "question": "Phishing and skimming are fraud-prone activities most associated with which department/unit?", "options": ["Electronic Banking", "Customer Service", "Financial Control/General Admin", "Cash & Teller"], "correct": 0, "explanation": "Electronic Banking is listed with fraud-prone activities including identity theft/account take-over, phishing, skimming, and social engineering."}, {"id": 96, "module": "Fraud and Fraudulent Practices", "question": "Which of the following is listed as a reason banks are vulnerable to fraud?", "options": ["Banks hold small amounts of money, reducing their attractiveness to criminals", "The increasing shift to digital banking provides opportunities for fraudsters to exploit vulnerabilities", "Banking products and processes have become extremely simple", "Banks no longer employ staff with system access"], "correct": 1, "explanation": "The increasing shift to digital banking technology has provided fraudsters with opportunities to exploit inherent vulnerabilities, making banks more susceptible to fraud."}, {"id": 97, "module": "Fraud and Fraudulent Practices", "question": "Which of these best describes 'Fraud Detection' as a fraud risk management strategy?", "options": ["Proactive measures to stop fraud before it occurs", "Mechanisms to identify fraudulent activities when they do occur", "Legal and disciplinary actions after fraud is confirmed", "Strategies to enhance controls after a loss"], "correct": 1, "explanation": "Fraud Detective strategies are mechanisms to identify fraudulent activities when they occur, using monitoring, technology, and real-time alerts."}, {"id": 98, "module": "Fraud and Fraudulent Practices", "question": "Investigation, remediation, and legal/disciplinary action against perpetrators fall under which fraud risk management strategy?", "options": ["Preventive", "Detective", "Corrective", "Rationalisation"], "correct": 2, "explanation": "Corrective strategies are reactive responses to identified fraud, involving investigation, remediation, legal/disciplinary action, and control enhancement."}, {"id": 99, "module": "Fraud and Fraudulent Practices", "question": "A fraudster is best defined in the manual as:", "options": ["Someone who commits only cybercrime", "A person who intentionally misrepresents a material fact so another party will part with property or surrender a right", "Only an external actor who hacks bank systems", "A bank customer who defaults on a loan"], "correct": 1, "explanation": "A fraudster intentionally misrepresents a material fact so that someone else acting on it will part with property or surrender a right."}, {"id": 100, "module": "Fraud and Fraudulent Practices", "question": "Which of the following is listed as an effect/impact of fraud on a bank?", "options": ["Increased shareholder confidence", "Loss of patronage by customers", "Reduced regulatory scrutiny", "Guaranteed higher profits"], "correct": 1, "explanation": "Effects of fraud include income loss, loss of confidence by shareholders, loss of patronage by customers, and increased regulatory surveillance."}]};
-const ALL_QUESTIONS = DATA.questions;
-const MODULES = DATA.modules;
-
-// ---------- State ----------
-let state = null;
-const STORAGE_KEY = 'bbo_exam_session_v1';
-
-function shuffle(arr){
-  const a = arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-
-// ---------- Theme ----------
-const themeIcon = document.getElementById('themeIcon');
-function applyTheme(t){
-  document.body.setAttribute('data-theme', t);
-  localStorage.setItem('bbo_theme', t);
-  themeIcon.innerHTML = t === 'dark'
-    ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>'
-    : '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>';
-}
-applyTheme(localStorage.getItem('bbo_theme') || 'light');
-document.getElementById('themeToggle').onclick = () => {
-  applyTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-};
-
-// ---------- Setup screen ----------
-const screenSetup = document.getElementById('screen-setup');
-const screenQuiz = document.getElementById('screen-quiz');
-const screenResults = document.getElementById('screen-results');
-
-let chosenCount = 20;
-let chosenMins = 20;
-let chosenModules = new Set(MODULES);
-
-document.getElementById('statTotal').textContent = ALL_QUESTIONS.length;
-
-document.querySelectorAll('#countPills .pill').forEach(btn=>{
-  btn.onclick = ()=>{
-    document.querySelectorAll('#countPills .pill').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    chosenCount = parseInt(btn.dataset.count);
-  };
-});
-document.querySelectorAll('#timePills .pill').forEach(btn=>{
-  btn.onclick = ()=>{
-    document.querySelectorAll('#timePills .pill').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    chosenMins = parseInt(btn.dataset.mins);
-  };
-});
-
-const moduleGrid = document.getElementById('moduleGrid');
-MODULES.forEach(m=>{
-  const count = ALL_QUESTIONS.filter(q=>q.module===m).length;
-  const row = document.createElement('label');
-  row.className = 'module-row';
-  row.innerHTML = `<input type="checkbox" checked data-mod="${m}"><span>${m}</span><span class="count">${count}</span>`;
-  moduleGrid.appendChild(row);
-});
-moduleGrid.addEventListener('change', ()=>{
-  chosenModules = new Set(
-    Array.from(moduleGrid.querySelectorAll('input:checked')).map(i=>i.dataset.mod)
-  );
-});
-
-document.getElementById('startBtn').onclick = () => startExam();
-
-function startExam(retryList){
-  let pool;
-  if(retryList){
-    pool = retryList;
-  } else {
-    pool = ALL_QUESTIONS.filter(q=>chosenModules.has(q.module));
-    if(pool.length === 0) pool = ALL_QUESTIONS.slice();
-    pool = shuffle(pool).slice(0, Math.min(chosenCount, pool.length));
-  }
-  state = {
-    questions: pool,
-    answers: new Array(pool.length).fill(null),
-    current: 0,
-    mins: retryList ? 0 : chosenMins,
-    secondsLeft: retryList ? 0 : chosenMins*60,
-    startedAt: Date.now(),
-    paused: false,
-    finished: false
-  };
-  saveSession();
-  renderQuiz(1);
-  showScreen('quiz');
-  startTimer();
-}
-
-// ---------- Persistence ----------
-function saveSession(){
-  if(!state) return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-function clearSession(){
-  localStorage.removeItem(STORAGE_KEY);
-}
-function checkResume(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(!raw) return;
-  try{
-    const s = JSON.parse(raw);
-    if(s && s.questions && !s.finished){
-      document.getElementById('resumeBanner').classList.remove('hidden');
-      const answered = s.answers.filter(a=>a!==null).length;
-      document.getElementById('resumeMeta').textContent =
-        `${answered} of ${s.questions.length} answered · ${s.mins ? Math.ceil(s.secondsLeft/60)+' min left' : 'no time limit'}`;
-      document.getElementById('resumeGo').onclick = () => {
-        state = s;
-        showScreen('quiz');
-        renderQuiz();
-        startTimer();
-        document.getElementById('resumeBanner').classList.add('hidden');
-      };
-      document.getElementById('resumeDiscard').onclick = () => {
-        clearSession();
-        document.getElementById('resumeBanner').classList.add('hidden');
-      };
-    }
-  }catch(e){ clearSession(); }
-}
-checkResume();
-
-// ---------- Timer ----------
-let timerInterval = null;
-function startTimer(){
-  clearInterval(timerInterval);
-  updateTimerDisplay();
-  if(!state.mins){
-    document.getElementById('timerText').textContent = '∞';
-    return;
-  }
-  timerInterval = setInterval(()=>{
-    if(state.paused) return;
-    state.secondsLeft--;
-    if(state.secondsLeft <= 0){
-      state.secondsLeft = 0;
-      updateTimerDisplay();
-      clearInterval(timerInterval);
-      finishExam();
-      return;
-    }
-    updateTimerDisplay();
-    if(state.secondsLeft % 5 === 0) saveSession();
-  }, 1000);
-}
-function updateTimerDisplay(){
-  const chip = document.getElementById('timerChip');
-  if(!state.mins){ document.getElementById('timerText').textContent = '∞'; return; }
-  const m = Math.floor(state.secondsLeft/60);
-  const s = state.secondsLeft%60;
-  document.getElementById('timerText').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-  chip.classList.toggle('warn', state.secondsLeft <= 60);
-}
-
-// ---------- Pause ----------
-const pauseOverlay = document.getElementById('pauseOverlay');
-const qCard = document.getElementById('qCard');
-document.getElementById('pauseBtn').onclick = () => setPaused(true);
-document.getElementById('resumeFromPause').onclick = () => setPaused(false);
-function setPaused(p){
-  state.paused = p;
-  pauseOverlay.classList.toggle('hidden', !p);
-  qCard.classList.toggle('hidden', p);
-  document.getElementById('prevBtn').disabled = p || state.current===0;
-  document.getElementById('nextBtn').disabled = p;
-}
-
-// ---------- Quiz rendering ----------
-const letters = ['A','B','C','D','E','F'];
-
-function renderQuiz(direction){
-  const q = state.questions[state.current];
-  const total = state.questions.length;
-
-  document.getElementById('progLabel').textContent = `Question ${state.current+1} of ${total}`;
-  document.getElementById('progPct').textContent = Math.round(((state.current+1)/total)*100)+'%';
-  document.getElementById('progFill').style.width = ((state.current+1)/total*100)+'%';
-
-  document.getElementById('qNum').textContent = `QUESTION ${state.current+1}`;
-  document.getElementById('qModule').textContent = q.module;
-  document.getElementById('qText').textContent = q.question;
-
-  const optsWrap = document.getElementById('qOptions');
-  optsWrap.innerHTML = '';
-  const savedAnswer = state.answers[state.current];
-
-  q.options.forEach((opt, idx)=>{
-    const el = document.createElement('div');
-    el.className = 'opt';
-    el.innerHTML = `<div class="letter">${letters[idx]}</div><div class="txt">${opt}</div>`;
-    if(savedAnswer !== null){
-      el.classList.add('locked');
-      if(idx === q.correct) el.classList.add('correct');
-      else if(idx === savedAnswer) el.classList.add('incorrect');
-    }
-    el.onclick = () => selectAnswer(idx);
-    optsWrap.appendChild(el);
-  });
-
-  document.getElementById('prevBtn').disabled = state.current === 0;
-  document.getElementById('nextBtn').textContent = state.current === total-1 ? 'Finish exam →' : 'Next →';
-
-  qCard.classList.remove('slide-in-r','slide-in-l');
-  void qCard.offsetWidth;
-  if(direction === 1) qCard.classList.add('slide-in-r');
-  else if(direction === -1) qCard.classList.add('slide-in-l');
-
-  saveSession();
-}
-
-function selectAnswer(idx){
-  if(state.paused) return;
-  if(state.answers[state.current] !== null) return; // locked once answered
-  state.answers[state.current] = idx;
-  renderQuiz(0);
-  saveSession();
-}
-
-document.getElementById('nextBtn').onclick = () => {
-  if(state.paused) return;
-  if(state.current < state.questions.length - 1){
-    state.current++;
-    renderQuiz(1);
-  } else {
-    finishExam();
-  }
-};
-document.getElementById('prevBtn').onclick = () => {
-  if(state.paused) return;
-  if(state.current > 0){
-    state.current--;
-    renderQuiz(-1);
-  }
-};
-
-document.addEventListener('keydown', (e)=>{
-  if(screenQuiz.classList.contains('hidden') || state.paused) return;
-  const key = e.key.toUpperCase();
-  const map = {'1':0,'2':1,'3':2,'4':3,'A':0,'B':1,'C':2,'D':3};
-  if(map[key] !== undefined){
-    const q = state.questions[state.current];
-    if(map[key] < q.options.length) selectAnswer(map[key]);
-  } else if(e.key === 'Enter'){
-    document.getElementById('nextBtn').click();
-  }
-});
-
-// ---------- Finish & Results ----------
-function finishExam(){
-  clearInterval(timerInterval);
-  state.finished = true;
-  saveSession();
-  clearSession();
-  renderResults();
-  showScreen('results');
-}
-
-let lastReviewFilter = 'all';
-
-function renderResults(){
-  const total = state.questions.length;
-  let correct = 0;
-  state.questions.forEach((q,i)=>{ if(state.answers[i]===q.correct) correct++; });
-  const pct = Math.round((correct/total)*100);
-
-  document.getElementById('scoreBig').textContent = pct+'%';
-  document.getElementById('scoreSub').textContent = `${correct} of ${total} correct`;
-
-  let verdict;
-  if(pct>=80) verdict = "Strong grasp of the manual — you're exam ready.";
-  else if(pct>=60) verdict = "Solid foundation. Review the weaker modules below before your exam.";
-  else verdict = "Keep studying — revisit the manual sections tied to your weaker modules.";
-  document.getElementById('scoreVerdict').textContent = verdict;
-
-  // breakdown by module
-  const bdWrap = document.getElementById('breakdown');
-  bdWrap.innerHTML = '';
-  const presentModules = MODULES.filter(m => state.questions.some(q=>q.module===m));
-  presentModules.forEach(m=>{
-    const mQs = state.questions.map((q,i)=>({q,i})).filter(x=>x.q.module===m);
-    const mCorrect = mQs.filter(x=>state.answers[x.i]===x.q.correct).length;
-    const mPct = Math.round((mCorrect/mQs.length)*100);
-    const row = document.createElement('div');
-    row.className = 'bd-row';
-    row.innerHTML = `<div class="name">${m}</div><div class="bd-track"><div class="bd-fill" style="width:${mPct}%"></div></div><div class="bd-pct">${mPct}%</div>`;
-    bdWrap.appendChild(row);
-  });
-
-  lastReviewFilter = 'all';
-  document.getElementById('tabAll').classList.add('active');
-  document.getElementById('tabMissed').classList.remove('active');
-  renderReviewList('all');
-}
-
-function renderReviewList(filter){
-  const wrap = document.getElementById('reviewList');
-  wrap.innerHTML = '';
-  state.questions.forEach((q,i)=>{
-    const ans = state.answers[i];
-    const isCorrect = ans === q.correct;
-    if(filter === 'missed' && isCorrect) return;
-    const item = document.createElement('div');
-    item.className = 'review-item';
-    let optsHtml = '';
-    q.options.forEach((opt, idx)=>{
-      let cls = '';
-      if(idx === q.correct) cls = 'correct';
-      else if(idx === ans) cls = 'incorrect';
-      if(cls) optsHtml += `<div class="review-opt ${cls}"><span class="letter">${letters[idx]}</span><span>${opt}</span></div>`;
-    });
-    item.innerHTML = `
-      <div class="q-module">${q.module}</div>
-      <div class="q-text">${i+1}. ${q.question}</div>
-      ${optsHtml}
-      <div class="explain"><b>Why: </b>${q.explanation}</div>
-    `;
-    wrap.appendChild(item);
-  });
-  if(wrap.children.length === 0){
-    wrap.innerHTML = '<div class="card" style="text-align:center; opacity:.6;">Nothing missed — great work.</div>';
-  }
-}
-
-document.getElementById('tabAll').onclick = () => {
-  document.getElementById('tabAll').classList.add('active');
-  document.getElementById('tabMissed').classList.remove('active');
-  renderReviewList('all');
-};
-document.getElementById('tabMissed').onclick = () => {
-  document.getElementById('tabMissed').classList.add('active');
-  document.getElementById('tabAll').classList.remove('active');
-  renderReviewList('missed');
-};
-
-document.getElementById('retakeBtn').onclick = () => {
-  showScreen('setup');
-};
-document.getElementById('retryMissedBtn').onclick = () => {
-  const missed = state.questions.filter((q,i)=>state.answers[i]!==q.correct);
-  if(missed.length === 0){ alert("You didn't miss any questions!"); return; }
-  startExam(shuffle(missed));
-  showScreen('quiz');
-};
-
-function showScreen(name){
-  screenSetup.classList.toggle('hidden', name!=='setup');
-  screenQuiz.classList.toggle('hidden', name!=='quiz');
-  screenResults.classList.toggle('hidden', name!=='results');
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-</script>
+            // Update main title
+            document.getElementById('module-title').innerText = btnElement.innerText;
+        }
+    </script>
 </body>
 </html>
