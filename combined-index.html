@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBE BBO Interactive Question Bank</title>
+    <style>
+        :root {
+            --primary: #004d99;
+            --secondary: #0066cc;
+            --bg-color: #f0f4f8;
+            --text-main: #333;
+            --text-muted: #555;
+            --border-radius: 8px;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: #fff;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: var(--primary);
+            padding: 20px;
+            margin: 0;
+            border-bottom: 1px solid #eee;
+            font-size: 1.2em;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 1em;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 1px solid #f4f4f4;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #e6f0ff;
+            color: var(--primary);
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary);
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* Main Content Styles */
+        .content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin: 0 0 10px 0;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .module-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .module-section.active {
+            display: block;
+        }
+
+        .qa-container { 
+            background: #fff; 
+            padding: 25px; 
+            margin-bottom: 20px; 
+            border-radius: var(--border-radius); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            border-left: 5px solid var(--secondary); 
+        }
+
+        .case-study { 
+            border-left: 5px solid #b8860b; 
+        }
+
+        .question { 
+            font-weight: 600; 
+            color: var(--primary); 
+            margin-bottom: 15px; 
+            font-size: 1.15em; 
+        }
+
+        .case-study .question {
+            color: #b8860b;
+        }
+
+        .answer { 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+        }
+
+        ul {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* --- Mobile Optimization --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            /* Convert sidebar to a swipeable top navigation bar */
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                /* Hide scrollbar for a cleaner look but keep functionality */
+                scrollbar-width: none; 
+            }
+            
+            .sidebar::-webkit-scrollbar {
+                display: none; 
+            }
+
+            .sidebar h2 {
+                display: none; /* Hides the title to save vertical screen real estate */
+            }
+
+            .nav-btn {
+                white-space: nowrap; /* Prevents button text from wrapping */
+                border-bottom: none;
+                border-right: 1px solid #f4f4f4;
+                padding: 12px 16px;
+                font-size: 0.95em;
+            }
+
+            /* Reduce padding to maximize reading area */
+            .content {
+                padding: 20px 15px;
+            }
+
+            .qa-container {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .question {
+                font-size: 1.05em;
+            }
+            
+            ul {
+                padding-left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>SBE BBO Modules</h2>
+        <button class="nav-btn active" onclick="showModule('mod1', this)">Module 1: The Business of Banking</button>
+        <button class="nav-btn" onclick="showModule('mod2', this)">Module 2: Customer Service</button>
+        <button class="nav-btn" onclick="showModule('mod3', this)">Module 3: Cash & Teller</button>
+        <button class="nav-btn" onclick="showModule('mod4', this)">Module 4: Clearing Operations</button>
+        <button class="nav-btn" onclick="showModule('mod5', this)">Module 5: Treasury Operations</button>
+        <button class="nav-btn" onclick="showModule('mod6', this)">Module 6: Funds Transfer</button>
+        <button class="nav-btn" onclick="showModule('mod7', this)">Module 7: Electronic Banking</button>
+        <button class="nav-btn" onclick="showModule('mod8', this)">Module 8: Foreign Operations</button>
+        <button class="nav-btn" onclick="showModule('cases', this)">Case Studies</button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="content">
+        <div class="header">
+            <h1 id="module-title">Module 1: The Business of Banking</h1>
+            <p>Select a module from the left menu to view the relevant question bank.</p>
+        </div>
+
+        <div id="mod1" class="module-section active">
+            <div class="qa-container ">
+                <div class="question">Q1: What are three services that a deposit bank renders to the customer?</div>
+                <div class="answer"><strong>A:</strong> The manual lists several services you can choose from:<br><ul><li>Mobilization of savings [cite: 5].</li><li>Extension of credit facilities for the financing of domestic and foreign trade [cite: 5].</li><li>Providing facility for the transfer of funds [cite: 5].</li><li>Management of customers' investment [cite: 5].</li><li>Safe keeping of valuables [cite: 5].</li><li>Brokerage services (buying and selling of stocks and shares) [cite: 5].</li><li>Providing of foreign exchange facilities for travelers [cite: 5].</li><li>Providing business status reports and references [cite: 5].</li><li>Business advisory services [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q2: What are the global roles of banks?</div>
+                <div class="answer"><strong>A:</strong> Banks play five different roles in the global economy:<br><ul><li>The intermediation role [cite: 5].</li><li>The payment role [cite: 5].</li><li>The guarantor role [cite: 5].</li><li>The agency role [cite: 5].</li><li>The policy role [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q3: What are the duties of the bank to their customer?</div>
+                <div class="answer"><strong>A:</strong> The duties of the banker include:<br><ul><li>The bank undertakes to receive money and settle bills for its customer's account [cite: 5].</li><li>The bank borrows the proceeds and undertakes to repay them [cite: 5].</li><li>The bank will not cease to do business with the customer except upon reasonable notice [cite: 5].</li><li>The bank is not liable to pay until the customer demands payment from the bank [cite: 5].</li><li>The bank should only make such payments as the customer has authorized (Pay according to Customers Instruction) [cite: 5].</li><li>The bank should not refuse to make payments up to the limit of the customer's credit balance [cite: 5].</li><li>The banker has a duty to keep in confidence what he/she knows about the customer's affairs (Confidentiality) [cite: 5].</li><li>The bank has a duty to provide the customer on request with a statement of account [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q4: The bank's businesses can be classified into two groups. What are those two groups?</div>
+                <div class="answer"><strong>A:</strong> Banking is divided into two main categories:<br><ul><li>Business groups [cite: 5].</li><li>Support groups [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q5: List the Consumer protection framework for banks.</div>
+                <div class="answer"><strong>A:</strong> The consumer protection framework seeks to guarantee:<br><ul><li>High standards for customer service delivery [cite: 5].</li><li>Market discipline [cite: 5].</li><li>Fair treatment of customers by banks [cite: 5].</li><li>Offer protection to the vulnerable group (less educated people, elderly, critically ill, refugees, physically challenged people etc.) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q6: List and explain five principles of the consumer protection framework.</div>
+                <div class="answer"><strong>A:</strong> The manual outlines nine principles; you can select any five:<br><ul><li>Legal, Regulatory, and Supervisory Framework: There shall be effective structures to protect consumers of banking services [cite: 5].</li><li>Responsible Business Conduct: Financial Institutions shall observe high ethical standards and offer suitable products [cite: 5].</li><li>Disclosure and Transparency: Financial institutions shall provide accurate, timely, detailed, and clear information [cite: 5].</li><li>Consumer Financial Education: Impart financial knowledge and skill to enable consumers to make informed decisions [cite: 5].</li><li>Fair treatment: Consumers shall be treated equitably without bias [cite: 5].</li><li>Protection of Consumer Assets and Privacy: Appropriate measures shall guarantee protection of consumer assets and personal information [cite: 5].</li><li>Complaints Handling and Redress: Adequate measures shall be established to address disputes fairly and transparently [cite: 5].</li><li>Competition: Competitive markets should be promoted to encourage innovation and excellent service delivery [cite: 5].</li><li>Enforcement: Ensure effective enforcement of regulations with the application of appropriate sanctions [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q7: What are the two major sources of the bank's income?</div>
+                <div class="answer"><strong>A:</strong> The two major sources of income are:<br><ul><li>Net Interest margin (Interest Income Less Interest Expense) [cite: 5].</li><li>Commission and Fees [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod2" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q8: What's the primary function of the CSU?</div>
+                <div class="answer"><strong>A:</strong> The Customer Service Unit (CSU) is the first point of contact when a customer comes to the Bank [cite: 5]. Its broad functions include:<br><ul><li>Account opening [cite: 5].</li><li>Issuance of customer cheque books [cite: 5].</li><li>Receiving customers' standing orders [cite: 5].</li><li>Receiving and effecting stop payment [cite: 5].</li><li>Making changes to customers mandates [cite: 5].</li><li>Performing the signature verification functions [cite: 5].</li><li>Attending to balance and general customer enquiries [cite: 5].</li><li>Receiving and handling customers' complaints [cite: 5].</li><li>Updating of Customer Mandates [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q9: What are the roles of a lobby officer in the CSU?</div>
+                <div class="answer"><strong>A:</strong> Lobby Service officers play a primarily customer service role and assist customers in the banking hall [cite: 5]. Their functions include:<br><ul><li>Welcoming and greeting customers as they come into the banking hall [cite: 5].</li><li>Directing customers to the appropriate service points [cite: 5].</li><li>Ensuring orderly conduct amongst customers in the banking hall [cite: 5].</li><li>Addressing customers questions and concerns [cite: 5].</li><li>Assisting with queue management to decongest the banking hall [cite: 5].</li><li>Answering the telephone in a friendly, professional manner, taking messages with accuracy [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q10: In the context of the CSU security, what measures should be taken to ensure confidentiality of customers?</div>
+                <div class="answer"><strong>A:</strong> The security functions of the CSU include:<br><ul><li>Keeping all cheque booklets issued and un-issued in the fireproof cabinets [cite: 5].</li><li>Complying with the provisions of the SOP with respect to re-order level for the stock of cheque books [cite: 5].</li><li>Time-stamping all incoming requests or mails and have records of outgoing mails [cite: 5].</li><li>Maintaining confidentiality in the treatment of all Customers' data [cite: 5].</li><li>Releasing cheque books as authorized by the Customers only [cite: 5].</li><li>Keeping stamps, files, copies of Customers letters and phone numbers away when closing [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q11: Give four examples of deposit accounts.</div>
+                <div class="answer"><strong>A:</strong> The manual lists several categories of accounts. You can choose from:<br><ul><li>Checking Accounts (Personal, Joint, Sole Proprietorship, Corporate, Unlimited Companies, Public Sector, NGO's Accounts) [cite: 5].</li><li>Savings Accounts [cite: 5].</li><li>Minor Accounts [cite: 5].</li><li>Partnership Accounts [cite: 5].</li><li>Investment Accounts [cite: 5].</li><li>Unincorporated, Society or Executor's Accounts [cite: 5].</li><li>External Accounts [cite: 5].</li><li>Domiciliary Accounts [cite: 5].</li><li>Trustee Accounts [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q12: Differentiate between current and savings account.</div>
+                <div class="answer"><strong>A:</strong> The key operational differences include:<br><ul><li>A Current Account is subject to a Current Account Maintenance Fee (CAMF) applied to customer induced debit transactions [cite: 5].</li><li>A Savings account is not subject to CAMF for withdrawals or transfers [cite: 5].</li><li>A Savings account cannot be thrown into debit [cite: 5].</li><li>Current accounts can accommodate loan repayments without incurring the CAMF charge [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q13: What is the main responsibility of the CSU staff for resolving complaints?</div>
+                <div class="answer"><strong>A:</strong> Handling customer complaints requires the CSU staff to:<br><ul><li>Keep a logbook for customer complaints [cite: 5].</li><li>Clearly establish what went wrong [cite: 5].</li><li>Identify alternative solutions [cite: 5].</li><li>Seek to correct error immediately [cite: 5].</li><li>Institute a process to avoid re-occurrence [cite: 5].</li><li>Inform customer of your actions and promise that there will not be repeat errors [cite: 5].</li><li>Ensure the customer is properly restituted and not made to suffer any loss in any form [cite: 5].</li><li>Let customer express emotions and train staff to see customer's point of view [cite: 5].</li><li>Gather information accurately and politely from the customer [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q14: List five categories of accounts commonly offered by the bank and explain.</div>
+                <div class="answer"><strong>A:</strong> The manual lists ten categories; you can list any five:<br><ul><li>Checking Accounts (includes Personal, Joint, Sole Proprietorship, Corporate, Unlimited Companies, Public Sector, NGO's Accounts) [cite: 5].</li><li>Savings Accounts [cite: 5].</li><li>Minor Accounts [cite: 5].</li><li>Partnership Accounts [cite: 5].</li><li>Investment Accounts [cite: 5].</li><li>Unincorporated, Society or Executor's Accounts [cite: 5].</li><li>External Accounts [cite: 5].</li><li>Domiciliary Accounts [cite: 5].</li><li>Trustee Accounts [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q15: Explain the importance of verifying customer information and identification.</div>
+                <div class="answer"><strong>A:</strong> Verifying customer information (like BVN) is crucial because it:<br><ul><li>Provides a means of identifying and verifying the identity of each customer across all banks in Nigeria [cite: 5].</li><li>Checks identity theft, ensures safety of customers' funds, and avoids losses through compromise of Personal Identification Numbers (PIN) [cite: 5].</li><li>Increases access, convenience, and service levels across the industry [cite: 5].</li><li>Promotes financial inclusion and revolutionizes the Payment System [cite: 5].</li><li>Enhances the integrity of banking services delivery by building a reliable customer identification system [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q16: What types of documents need to be submitted to create a corporate account?</div>
+                <div class="answer"><strong>A:</strong> The documents required for a Corporate Current Account include:<br><ul><li>Completed Account Opening Forms [cite: 5].</li><li>Identification of all signatories [cite: 5].</li><li>Copy of Certificate of Incorporation [cite: 5].</li><li>Certified Copy of Form CAC 2.3, CO7, CO2/ Status Report [cite: 5].</li><li>Certified Copy of Memo and Articles of Association [cite: 5].</li><li>Board Resolution to Open Account [cite: 5].</li><li>SCUML "where required" [cite: 5].</li><li>Tax identification number (TIN) [cite: 5].</li><li>License where required for consultancy and professional bodies [cite: 5].</li><li>BVN authentication and verification [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q17: Explain deferrals in the context of account opening.</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Deferrals can be done by designated senior staff [cite: 5].</li><li>Deferrals on CO7 should not exceed 30 days and no cheque book may be issued during this period [cite: 5].</li><li>Only very senior executive staff can defer any document for the Public Sector [cite: 5].</li><li>Banks can lose money through a shoddy handling of deferrals because the banking relationship is not yet fully established until all documentation are received from the Customer [cite: 5].</li><li>Statutory Documents cannot be waived under any circumstances [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod3" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q18: What is the significance of the layout and design in the teller area?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The layout and design can serve as a source of motivation to the Staff and customers [cite: 5].</li><li>Queue management skill is measured at the Teller points [cite: 5].</li><li>Speed of service can easily be established by a prospective Customer [cite: 5].</li><li>Courtesy extended by Tellers can be seen by all as it is an open place [cite: 5].</li><li>The Customers first impression of a Bank and the Staff is at the CTU and CSU [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q19: How does CCTV in a teller area contribute to bank security and operations?</div>
+                <div class="answer"><strong>A:</strong> CCTV is of great importance as it helps to:<br><ul><li>Monitor tellers for fraud [cite: 5].</li><li>Provide teller area supervision especially when the supervisor is not directly in the banking hall [cite: 5].</li><li>Deter robberies to an extent as the intended robber knows their face will be caught on camera [cite: 5].</li><li>Give customers additional comfort and confidence once they know the premises and teller area are under surveillance [cite: 5].</li><li>Prove highly useful during investigations [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q20: What qualities are expected from a teller in a banking environment?</div>
+                <div class="answer"><strong>A:</strong> Teller qualities include:<br><ul><li>Honesty and Integrity [cite: 5].</li><li>Courtesy [cite: 5].</li><li>Neat and welcoming [cite: 5].</li><li>Speed and accuracy [cite: 5].</li><li>Enthusiasm [cite: 5].</li><li>Security consciousness [cite: 5].</li><li>Courageous [cite: 5].</li></ul><br>Additionally, they must possess basic skills such as communication, numeric, interpersonal, listening, and problem solving skills [cite: 5].</div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q21: Who is a bank teller?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>A Teller is an employee of a bank who handles customer transactions, processes deposits/withdrawals, and balances cash drawers [cite: 5].</li><li>They are a banking professional who works at the front line of a bank branch [cite: 5].</li><li>They also answer customer questions, resolve issues and cross sell banks other products and services [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q22: Why is it important for a teller to resume earlier than other staff?</div>
+                <div class="answer"><strong>A:</strong> Tellers should resume earlier than 7:30am to:<br><ul><li>Switch on their computer and get ready for work [cite: 5].</li><li>Review their compartment and ensure no cash was left in the cubicle [cite: 5].</li><li>Pick their till boxes from the vault [cite: 5].</li><li>Receive an initial cash allocation to ensure they have sufficient cash to start the day [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q23: What is the sequence of activities tellers must perform at the end of the day?</div>
+                <div class="answer"><strong>A:</strong> The end-of-day sequence includes:<br><ul><li>The Teller balances their position by checking the balance on the system and comparing it to the balance of cash on hand [cite: 5].</li><li>If there is a difference, they print out the transaction journal and do a call over to resolve the error, escalating to a supervisor if it persists [cite: 5].</li><li>Complete the proof sheet to show the summary of activities for the day [cite: 5].</li><li>Make up a batch by enveloping all the instruments [cite: 5].</li><li>Complete a teller transfer slip to transfer (sell) any cash in the cubicle back to the vault [cite: 5].</li><li>Evacuate cash into the vault with the Vault Custodian [cite: 5].</li><li>Return loose cash, stamps, and proofs into the till box, lock it, and sign the vault record book alongside the Vault Custodian [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q24: Who are the key personnel involved in vault operations and what is the importance of dual control?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The key personnel are the Vault Custodian, Tellers / Bulk Tellers, Head Teller, Head of Operations, and Branch Services Manager [cite: 5].</li><li>The Vault must be under Dual Control to ensure that all cash movements from any of the stakeholders are done securely and in line with the Bank policy [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q25: Differentiate between a cash shortage and a cash overage.</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Cash Shortage:</strong> A situation whereby the physical cash with the Teller is less than the balance shown by the system and Teller Proof (often due to overpayment to customers or pilfering) [cite: 5].</li><li><strong>Cash Overage (Surplus):</strong> A situation whereby the physical cash with the Teller is more than the balance shown by the system and Teller Proof (often due to deliberate or genuine under-payment to customers) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q26: How do you process a deposit tagged 'Subject to Count' (STC)?</div>
+                <div class="answer"><strong>A:</strong> To process an STC deposit:<br><ul><li>Ensure a legally signed and executed Subject to Count agreement is in place between the bank and the customer [cite: 5].</li><li>Review the Deposit Slip for regularity [cite: 5].</li><li>Bundle count the cash deposits [cite: 5].</li><li>Pass entries immediately: Debit the Cash Account and Credit the customer's account immediately [cite: 5].</li><li>Release the acknowledgement slip to the customer [cite: 5].</li><li>Count the cash in detail within 24 hours [cite: 5].</li><li>Debit/Credit the customer's account under advice for any discovered shortages/overages [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q27: How do you handle a late cash deposit?</div>
+                <div class="answer"><strong>A:</strong> Handling a late deposit requires the teller to:<br><ul><li>Review the Deposit Slip for regularity [cite: 5].</li><li>Verify (detail count) cash in the presence of the depositor [cite: 5].</li><li>Machine stamp and write or rubber stamp "late deposit for credit on (date)" on the deposit slip [cite: 5].</li><li>Advise the depositor that credit to their account will be made the following business day [cite: 5].</li><li>Obtain the Cash Officer's/Supervisor's initials on the deposit slip and the Late Cash register [cite: 5].</li><li>Release the acknowledgement copy to the depositor [cite: 5].</li><li>Record Cash in the Teller Proof as Late Cash and place the deposit in the cash box/vault [cite: 5].</li><li>Process the deposit the following business day [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q28: What is the importance of maintaining a difference account for each teller?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The branch will have a specific difference account for shortages and overages [cite: 5].</li><li>It allows tellers to prepare debit or credit GL tickets to formally record unresolved cash differences, ensuring proper tracking and accountability [cite: 5].</li><li>It requires the signature of the Cash Officer/Head of Cash, maintaining strict oversight [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q29: What are the steps for handling counterfeit notes and forged checks?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>For counterfeit notes: Tellers must check for counterfeits under ultraviolet light during the cash counting process [cite: 5].</li><li>For forged checks: The teller must refer unusual endorsements, such as cheques that appear to be forged or cloned, to the Cash Officer/Head of Cash for review and approval before any payment is made [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod4" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q30: Who are the parties involved in a payment and settlement process (specifically for checks)?</div>
+                <div class="answer"><strong>A:</strong> The parties to the payments/settlements process are:<br><ul><li>Cheque Depositor [cite: 5].</li><li>Beneficiary [cite: 5].</li><li>Collection Bank [cite: 5].</li><li>Clearing House [cite: 5].</li><li>Bank 1 (Paying Bank) [cite: 5].</li><li>Payer / Cheque Issuer [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q31: What is a dud check?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>A dud check is one issued to induce the delivery of any asset or property, or to settle a lawful obligation, which when presented within a reasonable period of time is dishonoured (bounced) on grounds of lack of funds or insufficient funds in the account of the Issuer [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q32: How does the issuance of dud checks affect the financial system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>It erodes confidence and integrity in financial instruments [cite: 5].</li><li>It adversely affects the CBN 'Cash-lite' policy and the stability of the Financial System [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q33: What is clearing?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Clearing is a process of effecting settlements between third parties through the use of banks' instruments (e.g., cheques, drafts, dividend warrants) [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod5" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q34: What is the full meaning of NIBSS, CP, BA, Forex, and TC?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>NIBSS:</strong> Nigeria Interbank Settlement Systems [cite: 5].</li><li><strong>CP:</strong> Commercial Papers [cite: 5].</li><li><strong>BA:</strong> Bankers Acceptances [cite: 5].</li><li><strong>Forex:</strong> Foreign Exchange [cite: 5].</li><li><strong>TC:</strong> Travelers' Cheques [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q35: What is SWIFT and what is RTGS?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>SWIFT:</strong> The Society for Worldwide Interbank Financial Telecommunication. It is a highly secure platform used for processing foreign currency transactions and settlements between correspondent banks [cite: 5].</li><li><strong>RTGS:</strong> Real Time Gross Settlement. It is a settlement system where the transfer of large funds or securities between banks is executed on a "real time" (without delay) and "gross" (one-to-one) basis [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q36: What is the bank's risk exposure on a clean Commercial Paper, and why do investors prefer guaranteed ones?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Commercial Papers (CP) are completely unsecured unless a Bank adds its Guarantee, thereby becoming a Guaranteed Commercial Paper (GCP) [cite: 5].</li><li>On a clean CP, the customer is the primary obligor, leaving the investor exposed to default risk [cite: 5].</li><li>Investors prefer guaranteed ones because the bank becomes a secondary obligor, providing a formal guarantee of payment [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q37: Explain Open Buy Back (OBB) and Fixed Buy Back (FBB).</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Both are inter-bank placements or takings that are secured by Treasury Bills [cite: 5].</li><li><strong>Open Buy Back (OBB):</strong> Has a flexible timing (as short as 1 day/overnight or as long as 91 days). Being "open", either the counterparty or the bank can call for its deposit back at any time [cite: 5].</li><li><strong>Fixed Buy Back (FBB):</strong> Funds are pledged to the counterparty for a strictly fixed period, meaning the counterparty cannot call for its deposit back at any time [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q38: List five notable source documents in Treasury Operations.</div>
+                <div class="answer"><strong>A:</strong> The notable sources include:<br><ul><li>Deal Slips from the Treasury Dealers [cite: 5].</li><li>CBN Debits and Credits statements [cite: 5].</li><li>Cash lodgments Slips from the Treasury Department [cite: 5].</li><li>Cash Withdrawals Slips from the Treasury Department [cite: 5].</li><li>Foreign Exchange Deals Slips from the Foreign Exchange Department [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q39: What typical entries can be found in a CBN statement?</div>
+                <div class="answer"><strong>A:</strong> TROPS raises entries for CBN statements which include:<br><ul><li>Cash call [cite: 5].</li><li>Cash Reserve Requirements (CRR) [cite: 5].</li><li>Government Agencies Transactions (such as CBN cash lodgments and withdrawals) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q40: What processing platforms are available to Treasury Operations?</div>
+                <div class="answer"><strong>A:</strong> The processing platforms available to TROPS include:<br><ul><li>The Bank's Core Banking Package (e.g. Flexcube) [cite: 5].</li><li>RTGS / CIFTS (NISS) [cite: 5].</li><li>CBN T24 (DEPO X) [cite: 5].</li><li>SWIFT [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q41: Explain the following controls: Segregation of Duties, Authorization, Authorization Limits, Written Mandates, and Confirmation.</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Segregation of Duties:</strong> One person must not be allowed to initiate a transaction and conclude it; initiation, confirmation, recording, and settlement must be separated [cite: 5].</li><li><strong>Authorization:</strong> The staff that prepares the source document should not be the one to approve or authorize its posting [cite: 5].</li><li><strong>Authorization Limits:</strong> Setting limits in figures for staff, dictating what amounts signatories can approve and what junior/senior dealers can handle [cite: 5].</li><li><strong>Written Mandates:</strong> All instructions must be in writing; staff should not implement verbal instructions even from top Management as they can be denied [cite: 5].</li><li><strong>Confirmation:</strong> Due to their magnitude, all TROPS transactions must be independently confirmed before processing [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod6" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q42: What are the primary objectives of any payment and settlement system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The primary objectives of any settlement system are safety, security, soundness, effectiveness, and efficiency [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q43: What are the main differences between a traditional payment system and an electronic payment system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Traditional Payment System:</strong> Involves payments using cash and paper instruments like cheques and drafts. The value for most of these instruments is not immediate as they must be cleared [cite: 5].</li><li><strong>Electronic Payment System:</strong> A paperless system utilizing devices like Telephones, Computers, the Internet, and ATMs. Transactions handled this way are cheaper and processed more efficiently [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q44: What is the primary purpose of a wholesale payment system?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>A wholesale payment system handles high-value transactions between banks, governments, and other financial organizations [cite: 5].</li><li>These transactions are done through robust platforms like SWIFT and NIBSS (NEFT) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q45: Give examples of retail payment systems.</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Retail payment systems cover transactions involving individual customers using Smart Cards, ATMs, Phone banking, and other similar electronic banking products [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q46: What types of payments are covered by bulk NEFT credits and bulk NEFT debits?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Bulk NEFT Credits:</strong> These cover automated direct credits like salary and pension payments, and shareholders' dividends [cite: 5].</li><li><strong>Bulk NEFT Debits:</strong> These cover automated direct debits based on pre-authorized instructions, such as insurance premium payments, scheduled donations, and utility bill payments [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q47: What are the key advantages of a mobile money account?</div>
+                <div class="answer"><strong>A:</strong> With a Mobile Money account, a customer can:<br><ul><li>Deposit and Withdraw from their account directly via their phone [cite: 5].</li><li>Transfer money to anyone on any network [cite: 5].</li><li>Pay bills and buy airtime conveniently [cite: 5].</li><li>Send funds easily, as the mobile account of a beneficiary will be credited instantly [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q48: How do banks use dedicated instant payment systems for third-party transfers?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The bank installs the software on the customer's mobile phone and issues a USER ID and Password [cite: 5].</li><li>The remitter accesses the platform, selects the beneficiary's bank, enters the account details and amount, and sends the instruction [cite: 5].</li><li>Instantaneously, the remitter's account is debited and the beneficiary's account is credited, and both parties receive alerts [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q49: What are the primary goals of Fintech companies and how do they impact traditional banks?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The goal of FinTech companies is to make financial services easily accessible to the population, enhance financial procedures, promote financial inclusion, and ensure seamless payments [cite: 5].</li><li>They impact traditional banks by posing a direct competitive threat, offering the same services and forcing traditional banks to innovate to guarantee their survival [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q50: Who are the parties to a funds transfer process?</div>
+                <div class="answer"><strong>A:</strong> The parties to FT (whether local or foreign) are:<br><ul><li>Remitter or Sender [cite: 5].</li><li>Remitter or Sender's Bank [cite: 5].</li><li>Beneficiary [cite: 5].</li><li>Beneficiary's Bank [cite: 5].</li><li>Intermediary (maybe CBN, NIBSS, Discount Houses) [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod7" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q51: What are the potential benefits for customers using a mobile banking app?</div>
+                <div class="answer"><strong>A:</strong> The benefits of electronic/mobile banking include:<br><ul><li><strong>Convenience:</strong> Conduct transactions from anywhere with internet access [cite: 5].</li><li><strong>Speed and Efficiency:</strong> Faster processing without paperwork [cite: 5].</li><li><strong>Cost-effectiveness:</strong> Automating processes saves money [cite: 5].</li><li><strong>24/7 availability:</strong> Services available round the clock [cite: 5].</li><li><strong>Security:</strong> Protected by encryption and firewalls [cite: 5].</li><li><strong>Personalized services:</strong> Targeted messages and offers [cite: 5].</li><li><strong>Environmental Benefits:</strong> Reduces paper waste [cite: 5].</li><li><strong>Account & Investment Management:</strong> Easy tracking of finances and stock trading [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container ">
+                <div class="question">Q52: What is a major challenge or risk retail banks face with mobile banking apps?</div>
+                <div class="answer"><strong>A:</strong> Challenges and risks include:<br><ul><li><strong>Security Attacks:</strong> E-banking channels are vulnerable to cyberattacks as they rely on internet networks [cite: 5].</li><li><strong>Fraud:</strong> Fraudsters use phishing and social engineering to target customers [cite: 5].</li><li><strong>Insider Threats:</strong> Employees misusing access to customer data [cite: 5].</li><li><strong>Lack of Customer Awareness:</strong> Customers inadvertently exposing themselves to risks by sharing logins or falling for scams [cite: 5].</li><li><strong>Regulatory Compliance:</strong> Adapting to complex and time-consuming rules, like OTP usage during network issues [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="mod8" class="module-section ">
+            <div class="qa-container ">
+                <div class="question">Q53: List five transactions that can be documented using the e-form NCX.</div>
+                <div class="answer"><strong>A:</strong> E-Form NCX handles Non-Commercial Exports where payments are not expected. Transactions include:<br><ul><li>Gifts/Personal effects [cite: 5].</li><li>Trade Samples/printed Business Matter [cite: 5].</li><li>Machineries/Equipment for repairs & replacement abroad [cite: 5].</li><li>Return of Machineries/Equipment after the execution of specific contract [cite: 5].</li><li>Return of empty containers [cite: 5].</li><li>Trans-shipments/Re-exports [cite: 5].</li><li>Supplies to Diplomatic/Consular Missions and supplies to UNO for their own needs [cite: 5].</li></ul></div>
+            </div>
+        </div>
+        <div id="cases" class="module-section ">
+            <div class="qa-container case-study">
+                <div class="question">Case Study 1: How do you process a Zenith Bank check for 5 million Naira paid into an Access Bank account?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>This is processed as an Other Banks' Cheques (OBC) transaction because it is drawn on another bank but payable to our customer [cite: 5].</li><li>It will be processed through the Clearing House with a forward value date (T+1) [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 2: How do you treat an Access Bank check for 3 million Naira paid into another Access Bank account?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>It is processed internally as an In-House Account-To-Account Transfer since both the drawer and payee are domiciled with the same Drawee bank [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 3: A customer pays a UBA check for 10.1 million Naira. How is it processed?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Because the amount exceeds the maximum limit for cheques (N10 million fixed by the CBN), it cannot be cleared via standard cheque truncation [cite: 5].</li><li>The customer must utilize electronic channels like RTGS to transfer the funds [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 4: What platform should be used to debit an account for 7.5 million Naira to pay salaries for 550 staff?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>Bulk NEFT Credits</strong> should be used, as they are Automated Direct Credits designed specifically to facilitate paperless clearing of bulk credits like salaries [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 5: What platform is used to debit an account for 75 million Naira and purchase $75,000 for transfer?</div>
+                <div class="answer"><strong>A:</strong> <ul><li><strong>SWIFT</strong> is used for processing the foreign currency transactions and settlement instructions offshore [cite: 5].</li><li><strong>RTGS</strong> is used for the high-value Naira settlement [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 6: Assume Access Bank wants to buy $150,000 from First Bank. What platform will Access Bank use?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>Access Bank will use <strong>RTGS</strong> to execute the real-time interbank Naira settlement [cite: 5].</li><li>Access Bank will use <strong>SWIFT</strong> to process the foreign exchange settlement [cite: 5].</li></ul></div>
+            </div>
+            <div class="qa-container case-study">
+                <div class="question">Case Study 7: What platform should a customer use to transfer 135,000 Naira to a secondary school for fees?</div>
+                <div class="answer"><strong>A:</strong> <ul><li>The customer should use <strong>Single Item NEFT</strong> (which covers individual transfers like tuition payments) or <strong>NIBSS Instant Payment (NIP)</strong> [cite: 5].</li></ul></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Script -->
+    <script>
+        function showModule(moduleId, btnElement) {
+            // Hide all modules
+            var modules = document.querySelectorAll('.module-section');
+            modules.forEach(function(mod) {
+                mod.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            var buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+
+            // Show selected module
+            document.getElementById(moduleId).classList.add('active');
+            btnElement.classList.add('active');
+
+            // Update main title
+            document.getElementById('module-title').innerText = btnElement.innerText;
+        }
+    </script>
+</body>
+</html>
